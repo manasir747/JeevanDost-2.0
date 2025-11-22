@@ -1,0 +1,243 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["hi", "hello", "hey", "namaste", "namaskar", "hii"],
+      "responses": [
+        "😊Hey there! I'm JeevanDost, your friendly healthcare buddy. How can I assist you today? / हाय! मैं हूँ JeevanDost, आपका दोस्ताना हेल्थकेयर बॉट। आज मैं आपकी कैसे मदद कर सकता हूँ?😊",
+        "😊Hello! 🩺💙 I'm here to help you. Tell me your symptoms and I'll guide you. / मैं आपकी मदद के लिए यहाँ हूँ। अपने लक्षण बताइए। 🌟😊"
+      ],
+      "suggestions": ["🌡️ Fever / बुखार", "🤕 Headache / सिरदर्द", "🤧 Cough / खांसी", "😷 Sore throat / गले में दर्द"]
+    },
+    {
+      "tag": "fever",
+      "patterns": ["bukhar", "fever", "high temperature", "i have fever", "bhukar hai", "तापमान", "गर्मी", "low grade fever", "chills"],
+      "responses": [
+        "🌡️🔥 Don't worry! For fever, please take **Paracetamol (500mg)** every 6 hours. Rest well and drink plenty of water. 💧💤 / चिंता मत करो! बुखार के लिए **पैरासिटामोल** (500mg) हर 6 घंटे में लें। आराम करें और खूब पानी पिएं। 😊",
+        "🌡️❤️ I understand fever can be uncomfortable. Take **Paracetamol** and use a cold compress on your forehead. ❄️ Stay hydrated! 💧 / मुझे समझ है कि बुखार तकलीफदेह हो सकता है। **पैरासिटामोल** लें और माथे पर ठंडी पट्टी रखें। 😊"
+      ],
+      "suggestions": ["🤕 Headache / सिरदर्द", "💪 Body ache / शरीर दर्द", "😴 Weakness / कमजोरी", "🍲 Diet tips / खाने की सलाह"]
+    },
+    {
+      "tag": "headache",
+      "patterns": ["headache", "my head hurts", "mild headache", "sir dard", "सिरदर्द", "सिर में दर्द", "migraine", "severe headache", "dizziness"],
+      "responses": [
+        "🤕💔 I'm sorry you're having a headache! Take **Paracetamol (500mg)** or **Ibuprofen (400mg)**. Rest in a dark, quiet room 🌙 and drink water 💧. You'll feel better soon! ✨ / सिरदर्द के लिए **पैरासिटामोल** या **आइबुप्रोफेन** लें। अंधेरे कमरे में आराम करें। जल्दी ठीक हो जाएंगे! 💙",
+        "🤕😣 Headaches can be tough! Try taking **Paracetamol** and gently massaging your temples. 💆 Avoid screens for a while 📱❌. / **पैरासिटामोल** लें और कनपटी की हल्की मालिश करें। थोड़ी देर स्क्रीन से दूर रहें। ✨"
+      ],
+      "suggestions": ["🌡️ Fever / बुखार", "😷 Sore throat / गला", "👁️ Eye strain / आंख की थकान", "🧘 Relaxation tips / आराम के उपाय"]
+    },
+    {
+      "tag": "sore_throat",
+      "patterns": ["sore throat", "gala",  "throat pain", "gala dard", "गले में दर्द", "गला खराब", "difficulty swallowing", "kharaash"],
+      "responses": [
+        "😷🤒 Sore throat can be irritating! Gargle with **warm salt water** 💧 3-4 times daily. Drink honey with warm water or tea 🍯☕. Avoid cold drinks ❄️🚫 and ice cream 🍦❌. / गले के दर्द के लिए **गर्म नमक के पानी** से गरारे करें। शहद वाली चाय पिएं। ठंडी चीजें न खाएं। 😊",
+        "😷💚 I know throat pain is uncomfortable! Try warm salt water gargles and sip on ginger-honey tea 🫖🍯. You'll feel relief soon! ✨ / गर्म पानी से गरारे करें और अदरक-शहद की चाय पिएं। जल्दी आराम मिलेगा! 💚"
+      ],
+      "suggestions": ["🌡️ Fever / बुखार", "🤧 Cough / खांसी", "🥶 Cold / सर्दी", "💊 Medicine / दवाई"]
+    },
+    {
+      "tag": "cold_cough",
+      "patterns": ["cold", "cough", "runny nose", "blocked nose", "khasi", "zukam", "सर्दी", "खांसी", "नाक बंद", "sneezing", "dry cough", "wet cough"],
+      "responses": [
+        "🤧🥶 Cold and cough are common! Inhale **steam** 💨 2-3 times a day, stay warm 🧥 and drink hot fluids ☕. Take **Cetirizine (10mg)** at night 🌙. Eat Vitamin C-rich foods like oranges 🍊. / सर्दी-खांसी के लिए **भाप** लें, गर्म पानी पिएं। रात को **सेटीरिज़िन** लें। संतरे जैसे विटामिन C वाले फल खाएं। 😊",
+        "🤧😷 Don't worry, you'll recover soon! ✨ Do steam inhalation 💨, drink warm turmeric milk 🥛, and rest well 💤. Take **Cetirizine** before bed 🌙. / भाप लें, हल्दी वाला दूध पिएं और आराम करें। सोने से पहले **सेटीरिज़िन** लें। जल्दी ठीक हो जाएंगे! 😊"
+      ],
+      "suggestions": ["🌡️ Fever / बुखार", "😷 Sore throat / गला", "🏠 Home remedies / घरेलू उपाय", "🫁 Chest pain / छाती दर्द"]
+    },
+     {
+      "tag": "cold_home_remedies",
+      "patterns": ["home remedies for cold", "home remedies", "natural remedies cold", "gharelu upay cold", "सर्दी के घरेलू उपाय", "natural treatment cold", "home cure cold", "dadi maa ke nuskhe"],
+      "responses": [
+        "🏠🌿 Here are some effective home remedies for cold: Drink **ginger tea** with honey 🫖🍯, have **warm turmeric milk** before bed 🥛, gargle with salt water 💧, and inhale **steam with eucalyptus oil** 💨. Stay warm and rest! 😊 / सर्दी के लिए घरेलू उपाय: **अदरक की चाय** शहद के साथ पिएं, रात को **हल्दी वाला दूध** लें, नमक के पानी से गरारे करें और **नीलगिरी तेल के साथ भाप** लें। गर्म रहें और आराम करें! 🌟",
+        "🏠💚 Try these natural remedies! ✨ Boil **tulsi leaves** with ginger 🌿, have **honey with black pepper** 🍯, drink plenty of warm water 💧, and eat **vitamin C-rich fruits** 🍊. Apply **mustard oil** on chest before sleeping. / ये आजमाएं! **तुलसी के पत्ते** अदरक के साथ उबालें, **शहद और काली मिर्च** लें, गर्म पानी पिएं और **विटामिन C** वाले फल खाएं। सोने से पहले छाती पर **सरसों का तेल** लगाएं। 💙"
+      ],
+      "suggestions": ["🤧 Cough / खांसी", "😷 Sore throat / गला", "🌡️ Fever / बुखार", "💊 Medicine / दवाई"]
+    },
+    {
+      "tag": "stomach_pain",
+      "patterns": ["stomach pain", "pet dard", "पेट दर्द", "acidity", "gas", "पेट में दर्द", "stomach ache", "cramps"],
+      "responses": [
+        "🤰💔 For stomach pain, avoid spicy 🌶️ and oily food 🍔❌. Drink warm water with **ajwain** (carom seeds) 💧. If it's acidity, take **Pantoprazole (40mg)** 💊. Rest and eat light food 🍚🍌. / पेट दर्द के लिए तीखा और तैलीय खाना न खाएं। **अजवाइन** के साथ गर्म पानी पिएं। एसिडिटी हो तो **पैंटोप्राज़ोल** लें। 🌿",
+        "🤰😣 I understand stomach issues are painful! Try sipping on ginger tea 🫖 and avoid heavy meals 🍽️❌. Take **Pantoprazole** if needed 💊. Feel better soon! ✨ / अदरक की चाय पिएं और हल्का खाना खाएं। जरूरत हो तो **पैंटोप्राज़ोल** लें। 💛"
+      ],
+      "suggestions": ["🤕 Headache / सिरदर्द", "🤮 Vomiting / उल्टी", "🚽 Diarrhea / दस्त", "🍽️ Diet / खाना"]
+    },
+    {
+      "tag": "body_ache",
+      "patterns": ["body ache", "body pain", "muscle pain", "badan dard", "शरीर दर्द", "मांसपेशियों में दर्द", "joint pain", "jodon ka dard"],
+      "responses": [
+        "💪😫 Body ache can be exhausting! Take **Ibuprofen (400mg)** or **Combiflam** 💊. Apply pain relief balm 🧴 and rest well 💤. Stay hydrated! 💧 / शरीर दर्द के लिए **आइबुप्रोफेन** या **कॉम्बिफ्लेम** लें। दर्द निवारक बाम लगाएं और आराम करें। पानी पिएं! 😊",
+        "💪❤️ I know body aches are tiring! Try warm compress 🔥, take pain relief medicine 💊, and get good sleep 😴. You'll feel better! ✨ / गर्म सेक करें, दर्द की दवा लें और अच्छी नींद लें। बेहतर महसूस करेंगे! 😊"
+      ],
+      "suggestions": ["🌡️ Fever / बुखार", "😴 Weakness / कमजोरी", "🦴 Joint pain / जोड़ों का दर्द", "💤 Rest tips / आराम"]
+    },
+    {
+      "tag": "vomiting",
+      "patterns": ["vomiting", "nausea", "ulti", "उल्टी", "मतली", "feel sick", "throwing up", "giddiness"],
+      "responses": [
+        "🤢😣 Vomiting can be really uncomfortable! Take **Ondansetron (4mg)** 💊 if vomiting is severe. Sip ORS or lemon water 🍋💧 slowly. Eat light foods like banana 🍌 and rice 🍚. / उल्टी के लिए **ओंडांसेट्रॉन** लें। ORS या नींबू पानी धीरे-धीरे पिएं। केला और चावल जैसा हल्का खाना खाएं. 😊",
+        "🤢💚 I'm sorry you're feeling sick! Rest 💤, stay hydrated with small sips of water 💧. Take **Ondansetron** 💊 and avoid heavy meals 🍽️❌. / आराम करें, थोड़ा-थोड़ा पानी पिएं। **ओंडांसेट्रॉन** लें और भारी खाना न खाएं। 💚"
+      ],
+      "suggestions": ["🤰 Stomach pain / पेट दर्द", "🚽 Diarrhea / दस्त", "🌡️ Fever / बुखार", "💧 Dehydration / पानी की कमी"]
+    },
+    {
+      "tag": "diarrhea",
+      "patterns": ["diarrhea", "loose motion", "दस्त", "पतले दस्त", "loose stool", "running to the bathroom"],
+      "responses": [
+        "🚽😰 Diarrhea needs attention! Drink plenty of **ORS solution** 💧 to prevent dehydration. Take **Loperamide** 💊 if needed. Eat curd 🥛, banana 🍌, and rice 🍚. Avoid oily food! 🍔❌ / दस्त में **ORS** घोल जरूर पिएं। जरूरत हो तो **लोपरामाइड** लें। दही, केला, चावल खाएं। तैलीय खाना न खाएं! 💧",
+        "🚽💙 Stay hydrated with ORS! 💧 Take probiotics and eat BRAT diet (Banana 🍌, Rice 🍚, Applesauce 🍎, Toast 🍞). You'll recover soon! ✨ / ORS पिएं! प्रोबायोटिक्स लें और केला, चावल जैसा हल्का खाना खाएं। जल्दी ठीक होंगे! 😊"
+      ],
+      "suggestions": ["🤰 Stomach pain / पेट", "🤢 Vomiting / उल्टी", "😴 Weakness / कमजोरी", "💧 ORS solution"]
+    },
+    {
+      "tag": "weakness",
+      "patterns": ["weakness", "tired", "fatigue", "kamzori", "कमजोरी", "थकान", "feel weak", "low energy", "lethargy"],
+      "responses": [
+        "😴💤 Feeling weak is common during illness! Rest well 🛌, eat nutritious food 🥗 rich in protein 🍗 and iron 🥬. Take **multivitamin supplements** 💊. Stay hydrated! 💧 / कमजोरी महसूस हो रही है तो आराम करें। प्रोटीन और आयरन युक्त खाना खाएं। **मल्टीविटामिन** लें। पानी पिएं! 😊",
+        "😴❤️ Your body needs rest! Sleep 7-8 hours 💤, eat fruits 🍎🍊, nuts 🥜, and green vegetables 🥬. Take it easy and you'll regain energy! ⚡ / शरीर को आराम चाहिए! 7-8 घंटे सोएं, फल, मेवे और हरी सब्जियां खाएं। धीरे-धीरे ऊर्जा वापस आएगी! 💪"
+      ],
+      "suggestions": ["🌡️ Fever / बुखार", "💪 Body ache / दर्द", "🍽️ Diet tips / खाना", "💊 Vitamins / विटामिन"]
+    },
+    {
+      "tag": "chest_pain",
+      "patterns": ["chest pain", "chest discomfort", "छाती में दर्द", "सीने में दर्द", "heart pain", "palpitations", "breathing difficulty", "saans lene mein dikkat"],
+      "responses": [
+        "⚠️🚨 Chest pain should not be ignored! If it's severe or accompanied by breathlessness 😮‍💨, please **consult a doctor immediately** 🏥 or go to ER 🚑. For mild discomfort from acidity, take **Antacid** 💊. / छाती का दर्द गंभीर हो सकता है! अगर तेज दर्द या सांस लेने में दिक्कत है तो **तुरंत डॉक्टर से मिलें**। हल्की एसिडिटी हो तो **एंटासिड** लें। 🚨",
+        "⚠️❤️ Please be careful! If chest pain is severe, **seek medical help immediately** 🏥🚑. For mild acidity-related discomfort, take **Eno** or **Digene** 💊. / कृपया सावधान रहें! गंभीर दर्द हो तो **तुरंत चिकित्सा सहायता लें**। हल्की एसिडिटी के लिए **ईनो** या **डाइजीन** लें। 💙"
+      ],
+      "suggestions": ["🚨 Emergency / आपातकाल", "🤰 Acidity / एसिडिटी", "👨‍⚕️ Doctor / डॉक्टर", "😮‍💨 Breathlessness / सांस"]
+    },
+    {
+      "tag": "back_pain",
+      "patterns": ["back pain", "lower back pain", "kamard dard", "पीठ दर्द", "spine pain", "neck pain", "gardan dard"],
+      "responses": [
+        "🛌😣 Back pain can be troublesome! Apply **pain relief gel** 🧴 and use hot water bag 🔥. Take **Ibuprofen (400mg)** 💊 and avoid sitting for long hours ⏰❌. Do gentle stretching! 🧘 / कमर दर्द के लिए **दर्द निवारक जेल** लगाएं और गर्म पानी की बोतल रखें। **आइबुप्रोफेन** लें। लंबे समय तक न बैठें। हल्की स्ट्रेचिंग करें! 😊",
+        "🛌💙 I understand back pain is difficult! Rest on a firm mattress 🛏️, apply heat therapy 🔥, and take pain relief medicine 💊. Avoid heavy lifting! 🏋️❌ / मजबूत गद्दे पर आराम करें, गर्म सेक करें और दर्द की दवा लें। भारी सामान न उठाएं! 💚"
+      ],
+      "suggestions": ["💪 Body ache / शरीर दर्द", "😫 Neck pain / गर्दन दर्द", "🏃 Exercises / व्यायाम", "🧘 Posture tips"]
+    },
+    {
+      "tag": "toothache",
+      "patterns": ["toothache", "tooth pain", "dental pain", "daant dard", "दांत दर्द", "दांत में दर्द", "gum pain", "jaw pain"],
+      "responses": [
+        "🦷😖 Toothache can be very painful! Rinse mouth with warm salt water 💧. Apply **clove oil** 🌿 on the affected tooth. Take **Ibuprofen** 💊 for pain. Visit a dentist soon! 👨‍⚕️ / दांत दर्द बहुत तकलीफदेह है! गर्म नमक के पानी से कुल्ला करें। **लौंग का तेल** लगाएं। **आइबुप्रोफेन** लें। जल्द दंत चिकित्सक से मिलें! 🦷",
+        "🦷💔 Don't suffer! Use **clove oil** 🌿 or **pain relief gel** 🧴 for temporary relief. Take pain medicine 💊 and **see a dentist** 👨‍⚕️ as soon as possible! / **लौंग का तेल** या **दर्द निवारक जेल** लगाएं। दवा लें और जल्द से जल्द **दंत चिकित्सक** से मिलें! 😊"
+      ],
+      "suggestions": ["🤕 Headache / सिरदर्द", "😣 Jaw pain / जबड़े का दर्द", "👨‍⚕️ Dentist / डेंटिस्ट", "🏠 Home remedy / घरेलू उपाय"]
+    },
+    {
+      "tag": "skin_rash",
+      "patterns": ["skin rash", "itching", "allergy", "khujli", "खुजली", "त्वचा पर चकत्ते", "रैशेज", "skin allergy", "hives", "dermatitis"],
+      "responses": [
+        "🩹😣 Skin rash or itching can be annoying! Apply **Calamine lotion** 🧴 or **antihistamine cream** 💊. Take **Cetirizine (10mg)** at night 🌙. Keep the area clean 🧼 and dry. / खुजली के लिए **कैलामाइन लोशन** या **एंटीहिस्टामाइन क्रीम** लगाएं। रात को **सेटीरिज़िन** लें। जगह को साफ और सूखा रखें। 🌸",
+        "🩹🌟 Don't scratch! ✋❌ Apply **Calamine** 🧴 or **Hydrocortisone cream** 💊. Take anti-allergy tablet and avoid allergens. If severe, see a doctor! 👨‍⚕️ / खुजाएं नहीं! **कैलामाइन** या **हाइड्रोकार्टिसोन क्रीम** लगाएं। एलर्जी की गोली लें। गंभीर हो तो डॉक्टर से मिलें! 💙"
+      ],
+      "suggestions": ["🤧 Allergy / एलर्जी", "🌡️ Fever / बुखार", "🦠 Infection / संक्रमण", "👨‍⚕️ Doctor / डॉक्टर"]
+    },
+    {
+      "tag": "eye_problem",
+      "patterns": ["eye pain", "red eyes", "aankh dard", "आंखों में लाली", "eye irritation", "burning eyes", "stye", "conjunctivitis"],
+      "responses": [
+        "👁️😣 Eye problems need care! For irritation, use **eye drops** 💧 like Refresh Tears. Avoid screens 📱❌, rest your eyes 😌. If pain persists or vision is affected 👓, **see a doctor**! 👨‍⚕️ / आंख की समस्या के लिए **आई ड्रॉप्स** जैसे रिफ्रेश टियर्स डालें। स्क्रीन से बचें, आंखों को आराम दें। दर्द बना रहे तो **डॉक्टर से मिलें**! 👀",
+        "👁️💙 Take care of your eyes! 👀✨ Use lubricating **eye drops** 💧 and give rest 😌. Avoid rubbing 🚫. If redness 🔴 or pain continues, consult an eye specialist! 👨‍⚕️ / **आई ड्रॉप्स** डालें और आराम दें। मलें नहीं। लाली या दर्द बना रहे तो नेत्र विशेषज्ञ से मिलें! 💚"
+      ],
+      "suggestions": ["🤕 Headache / सिरदर्द", "📱 Screen time / स्क्रीन", "😫 Eye strain / थकान", "👨‍⚕️ Doctor / डॉक्टर"]
+    },
+    {
+      "tag": "sleep_issue",
+      "patterns": ["insomnia", "sleeplessness", "need sleep", "neend nahi aati", "sleep problem", "can't sleep", "nightmare"],
+      "responses": [
+        "😴💤 Getting good sleep is vital! Try practicing **sleep hygiene**: go to bed at the same time ⏰, avoid screens 📱❌ before sleep, and have a warm bath 🛀. Avoid caffeine ☕. / अच्छी नींद बहुत जरूरी है! **स्लीप हाइजीन** का अभ्यास करें: एक ही समय पर सोएं, स्क्रीन से बचें, और गर्म पानी से नहाएं। कैफीन से बचें। 😊",
+        "😴🧘 Try **meditation** or **deep breathing exercises** before bed. Ensure your room is dark and cool 🌑. If the problem persists, please consult a doctor. / सोने से पहले **ध्यान** या **गहरी सांस** लें। अपने कमरे को अँधेरा और ठंडा रखें। अगर समस्या बनी रहती है, तो डॉक्टर से सलाह लें। 💙"
+      ],
+      "suggestions": ["😴 Weakness / कमजोरी", "🧘 Relaxation tips / आराम के उपाय", "🍽️ Diet / खाना"]
+    },
+
+    {
+  "tag": "relaxation_tips",
+  "patterns": ["relaxation tips", "stress relief", "how to relax", "tension kam kaise kare", "आराम के उपाय", "तनाव कम करें", "calm down", "anxiety relief", "mental peace"],
+  "responses": [
+    "🧘💆 Here are some relaxation tips! Practice **deep breathing** (4-7-8 technique) 🌬️, try **meditation** for 10-15 minutes 🧘‍♀️, listen to **calming music** 🎵, and take a **warm bath** 🛀. Go for a gentle walk in nature 🌳. / आराम के लिए **गहरी सांस** लें (4-7-8 तकनीक), 10-15 मिनट **ध्यान** करें, **शांत संगीत** सुनें और **गर्म पानी से नहाएं**। प्रकृति में हल्की सैर करें। 😊✨",
+    "🧘💙 Take time for yourself! ✨ Try **progressive muscle relaxation** 💪, practice **yoga** 🧘, drink **herbal tea** (chamomile/lavender) 🍵, and write in a **journal** 📝. Spend time with loved ones 💕 or do activities you enjoy! 🎨📚 / अपने लिए समय निकालें! **प्रोग्रेसिव मसल रिलैक्सेशन** करें, **योग** का अभ्यास करें, **हर्बल चाय** (कैमोमाइल/लैवेंडर) पिएं और **डायरी** लिखें। प्रियजनों के साथ समय बिताएं या पसंदीदा गतिविधियां करें! 💚"
+  ],
+  "suggestions": ["😴 Sleep problem / नींद", "🤕 Headache / सिरदर्द", "💪 Body ache / दर्द", "🧠 Mental health / मानसिक स्वास्थ्य"]
+},
+    {
+      "tag": "pregnancy_info",
+      "patterns": ["pregnant", "pregnancy", "pregnancy tips", "childbirth", "baby health", "garbhavastha"],
+      "responses": [
+        "🤰🌟 Congratulations! Please **consult your gynecologist** 👨‍⚕️ for personalized advice and regular checkups. Maintain a healthy diet 🥗 and take prescribed supplements like **Folic Acid and Iron**. / बधाई हो! व्यक्तिगत सलाह और नियमित जांच के लिए कृपया अपने **स्त्री रोग विशेषज्ञ** से मिलें। स्वस्थ आहार लें और **फोलिक एसिड और आयरन** जैसे सप्लीमेंट्स लें। 💖",
+        "🤰❤️ Pregnancy is a wonderful journey! Stay hydrated 💧, eat balanced meals, and get plenty of rest 💤. **Avoid self-medication** and follow your doctor's instructions strictly. / गर्भावस्था एक अद्भुत सफर है! हाइड्रेटेड रहें, संतुलित भोजन करें और खूब आराम करें। **खुद से दवा न लें** और डॉक्टर के निर्देशों का सख्ती से पालन करें। ✨"
+      ],
+      "suggestions": ["🤰 Diet tips / आहार", "👨‍⚕️ Doctor / डॉक्टर", "💪 Body ache / दर्द"]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["bye", "goodbye", "alvida", "chalta hu", "bye bye"],
+      "responses": [
+        "Take care and get well soon! Stay healthy! 🌿💚✨ / ख्याल रखें और जल्दी स्वस्थ हों! 💚😊",
+        "Goodbye! 👋 Wishing you a speedy recovery! 🩺💙 / अलविदा! जल्दी ठीक हो जाएं! 😊🌟",
+        "Thanks for chatting! 😊 Stay safe and healthy! 🌿💪 / बात करके अच्छा लगा! स्वस्थ रहें! 🙏✨"
+      ],
+      "suggestions": []
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["thank you", "thanks", "धन्यवाद", "shukriya", "thnks", "thanku"],
+      "responses": [
+        "You're very welcome! 😊💙 I'm happy to help! ✨ / आपका स्वागत है! मुझे मदद करके खुशी हुई! 💙🌟",
+        "No problem at all! 😊 Feel free to ask anytime! 🌟💚 / कोई बात नहीं! कभी भी पूछ सकते हैं! 🌟😊",
+        "Always here to help! 💪✨ Take care! 🌿 / हमेशा मदद के लिए हाजिर हूँ! ख्याल रखें! 🙏💚"
+      ],
+      "suggestions": ["❓ Any other symptoms? / कुछ और?", "👋 Goodbye / अलविदा"]
+    },
+    {
+  "tag": "vitamins",
+  "patterns": ["vitamins", "vitamin supplement", "multivitamin", "vitamin deficiency", "विटामिन", "vitamin ki kami", "which vitamins to take", "vitamin b12", "vitamin d", "vitamin c"],
+  "responses": [
+    "💊🌟 Vitamins are essential for health! Common supplements include **Vitamin C** for immunity 🍊, **Vitamin D** for bones ☀️, **Vitamin B12** for energy ⚡, and **Iron** for blood 🩸. Take **Multivitamin tablets** daily after meals. Eat fruits 🍎, vegetables 🥬, and nuts 🥜! / विटामिन स्वास्थ्य के लिए जरूरी हैं! **विटामिन C** रोग प्रतिरोधक क्षमता के लिए, **विटामिन D** हड्डियों के लिए, **विटामिन B12** ऊर्जा के लिए और **आयरन** खून के लिए लें। खाने के बाद **मल्टीविटामिन** लें। फल, सब्जियां और मेवे खाएं! 😊",
+    "💊💚 Good nutrition is key! ✨ Take **Multivitamin supplements** like Revital or Neurobion 💪. Include **Vitamin D** (especially if less sun exposure ☀️), **Omega-3** for heart ❤️, and **Calcium** for bones 🦴. Consult your doctor for personalized advice! 👨‍⚕️ / अच्छा पोषण महत्वपूर्ण है! **मल्टीविटामिन** जैसे रिवाइटल या न्यूरोबियन लें। **विटामिन D** (धूप कम मिलने पर), **ओमेगा-3** दिल के लिए और **कैल्शियम** हड्डियों के लिए लें। डॉक्टर से सलाह लें! 💙"
+  ],
+  "suggestions": ["😴 Weakness / कमजोरी", "🍽️ Diet tips / खाना", "💪 Body ache / दर्द", "👨‍⚕️ Doctor / डॉक्टर"]
+},
+
+{
+  "tag": "diet_tips",
+  "patterns": ["diet tips", "what to eat", "healthy diet", "food suggestions", "खाने की सलाह", "kya khana chahiye", "nutrition advice", "healthy eating", "balanced diet", "diet plan"],
+  "responses": [
+    "🍽️🥗 Here are some healthy diet tips! Eat a **balanced diet** with fruits 🍎🍊, vegetables 🥬🥕, whole grains 🌾, and proteins 🍗🥚. Drink 8-10 glasses of water 💧 daily. Avoid junk food 🍔❌, excess sugar 🍬❌, and oily food 🍟❌. Eat small meals every 3-4 hours ⏰. / स्वस्थ आहार के लिए **संतुलित भोजन** करें - फल, सब्जियां, साबुत अनाज और प्रोटीन। रोज 8-10 गिलास पानी पिएं। जंक फूड, ज्यादा चीनी और तैलीय खाना न खाएं। हर 3-4 घंटे में थोड़ा-थोड़ा खाएं। 😊✨",
+    "🍽️💚 Nutrition is the foundation of health! ✨ Include **seasonal fruits and vegetables** 🥗, **nuts and seeds** 🥜, **dairy products** 🥛, and **lean proteins** 🐟. Start your day with a healthy breakfast 🌅. Avoid processed foods 📦❌. Add **turmeric, ginger, and garlic** 🧄 to boost immunity! 💪 / पोषण स्वास्थ्य की नींव है! **मौसमी फल और सब्जियां**, **मेवे**, **डेयरी उत्पाद** और **प्रोटीन** शामिल करें। दिन की शुरुआत स्वस्थ नाश्ते से करें। प्रोसेस्ड फूड न खाएं। **हल्दी, अदरक और लहसुन** रोग प्रतिरोधक क्षमता बढ़ाते हैं! 🌟"
+  ],
+  "suggestions": ["😴 Weakness / कमजोरी", "💊 Vitamins / विटामिन", "🤰 Stomach pain / पेट", "🌡️ Fever / बुखार"]
+},
+{
+  "tag": "doctor",
+  "patterns": ["need doctor", "doctor",  "consult doctor", "doctor ke paas jaana hai", "डॉक्टर से मिलना है", "see a doctor", "medical help", "doctor consultation", "when to see doctor", "hospital jaana hai"],
+  "responses": [
+    "👨‍⚕️🏥 If symptoms persist or worsen, please **consult a doctor immediately**! 🚨 Visit your nearest clinic or hospital 🏥. For emergencies, call **108/112** 📞. Don't ignore severe symptoms like chest pain 🫁, high fever 🌡️, or difficulty breathing 😮‍💨. Your health is priority! 💙 / अगर लक्षण बने रहें या बिगड़ें तो **तुरंत डॉक्टर से मिलें**! निकटतम क्लिनिक या अस्पताल जाएं। आपातकाल में 108/112 पर कॉल करें। गंभीर लक्षणों को नजरअंदाज न करें। आपकी सेहत प्राथमिकता है! ✨",
+    "👨‍⚕️💚 Medical consultation is important! ✨ If you have persistent symptoms, unexplained pain, or concerns, please **visit a qualified doctor** 🩺. They can provide proper diagnosis and treatment 💊. For online consultation, consider telemedicine services 📱. Don't self-medicate for serious conditions! ⚠️ / चिकित्सा परामर्श जरूरी है! अगर लक्षण बने रहें, अस्पष्ट दर्द हो या चिंता हो तो **योग्य डॉक्टर से मिलें**। वे सही निदान और उपचार देंगे। ऑनलाइन परामर्श के लिए टेलीमेडिसिन सेवाएं उपलब्ध हैं। गंभीर स्थिति में खुद से दवा न लें! 💙"
+  ],
+  "suggestions": ["🚨 Emergency / आपातकाल", "🏥 Hospital / अस्पताल", "💊 Medicine / दवाई", "🌡️ Fever / बुखार"]
+},
+
+{
+  "tag": "mental_health",
+  "patterns": ["mental health", "depression", "anxiety", "stress", "मानसिक स्वास्थ्य", "depression hai", "tension hai", "sad feel", "mental problem", "udaas", "hopeless", "panic attack"],
+  "responses": [
+    "🧠💙 Mental health is just as important as physical health! If you're feeling anxious, depressed, or stressed, please **talk to someone you trust** 💬. Practice **self-care**: meditation 🧘, exercise 🏃, good sleep 😴, and healthy diet 🥗. Consider consulting a **mental health professional** or counselor 👨‍⚕️. You're not alone! ✨ / मानसिक स्वास्थ्य उतना ही महत्वपूर्ण है! अगर चिंता, अवसाद या तनाव महसूस हो तो **किसी विश्वसनीय व्यक्ति से बात करें**। **आत्म-देखभाल** करें: ध्यान, व्यायाम, अच्छी नींद और स्वस्थ आहार। **मानसिक स्वास्थ्य विशेषज्ञ** से परामर्श लें। आप अकेले नहीं हैं! 💚",
+    "🧠💚 Your mental wellbeing matters! 💪✨ Try **deep breathing exercises** 🌬️, **journaling** 📝, and spend time with loved ones 💕. Seek help from a **therapist or psychiatrist** if needed 👨‍⚕️. Helplines: **KIRAN (1800-599-0019)** for mental health support 📞. Remember, seeking help is a sign of strength, not weakness! 🌟 / आपका मानसिक स्वास्थ्य महत्वपूर्ण है! **गहरी सांस के व्यायाम**, **डायरी लेखन** और प्रियजनों के साथ समय बिताएं। जरूरत हो तो **थेरेपिस्ट या मनोचिकित्सक** से मदद लें। हेल्पलाइन: **KIRAN (1800-599-0019)**। याद रखें, मदद मांगना ताकत की निशानी है! 💙"
+  ],
+  "suggestions": ["🧘 Relaxation tips / आराम", "😴 Sleep problem / नींद", "👨‍⚕️ Doctor / डॉक्टर", "💪 Stress relief / तनाव"]
+},
+    {
+      "tag": "emergency",
+      "patterns": ["emergency", "urgent", "serious", "aapatkal", "गंभीर", "severe pain", "i need help now", "call ambulance", "serious injury"],
+      "responses": [
+        "🚨⚠️ **This sounds serious!** Please call emergency services 📞 (**108/112**) or visit the nearest hospital 🏥 immediately. Don't delay! ⏰❌ / **यह गंभीर लग रहा है!** कृपया आपातकालीन सेवाओं को कॉल करें (108/112) या तुरंत निकटतम अस्पताल जाएं। देरी न करें! 🏥🚑",
+        "🚨❤️ **Please seek immediate medical attention!** Call **108** 📞 or go to ER 🚑 right away. Your health is priority! 💙⚠️ / **तुरंत चिकित्सा सहायता लें!** 108 पर कॉल करें या तुरंत ER जाएं। आपकी सेहत प्राथमिकता है! ⚠️💚"
+      ],
+      "suggestions": ["📞 Call 108", "🏥 Hospital / अस्पताल", "🫁 Chest pain / सीने में दर्द"]
+    }
+  ]
+}

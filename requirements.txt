@@ -1,0 +1,6 @@
+Flask
+gunicorn
+werkzeug
+supabase
+supabase-py
+twilio

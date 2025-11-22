@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard • JeevanDost</title>
+  <style>
+    /* Keeps same theme: teal/blue gradient, rounded cards */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background-image: url('https://static.vecteezy.com/system/resources/previews/006/712/985/non_2x/abstract-health-medical-science-healthcare-icon-digital-technology-science-concept-modern-innovation-treatment-medicine-on-hi-tech-future-blue-background-for-wallpaper-template-web-design-vector.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      width: 860px;
+      max-width: 95%;
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+
+    .header {
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .profile {
+      display:flex;
+      gap: 16px;
+      align-items:center;
+    }
+
+    .avatar {
+      width:64px;height:64px;border-radius:12px;
+      background: linear-gradient(135deg,#00bcd4,#00796b);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:22px;
+    }
+
+    h2 { color:#00796b;margin:0;font-size:22px; }
+
+    .user-info { color:#444; font-size:14px; }
+    .actions { display:flex; gap:10px; }
+
+    .btn {
+      background: linear-gradient(135deg,#00bcd4,#00796b);
+      color:white;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:bold;
+    }
+
+    .section { margin-top:18px; }
+    .label { color:#00796b; font-weight:bold; margin-bottom:6px; display:block; }
+
+    .appointment-list { margin-top:12px; display:flex; flex-direction:column; gap:10px; }
+    .appt { background:#f5f7fa; padding:12px; border-radius:10px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+    .appt-left { max-width:70%; }
+    .small { font-size:13px; color:#555; }
+
+    .top-actions { display:flex; gap:10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="profile">
+        <div class="avatar" id="avatar-letters">JD</div>
+        <div>
+          <h2 id="user-fullname">User Name</h2>
+          <div class="user-info" id="user-email-phone">email • phone</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="location.href='/launch'">Open Health Assistant</button>
+        <button class="btn" onclick="location.href='/appointments_page'">Manage Appointments</button>
+        <button class="btn" onclick="location.href='/logout'">Logout</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="label">Profile Summary</span>
+      <div style="display:flex;gap:24px;">
+        <div>
+          <div class="small">DOB</div>
+          <div id="user-dob" style="font-weight:bold;color:#333">-</div>
+        </div>
+        <div>
+          <div class="small">Age</div>
+          <div id="user-age" style="font-weight:bold;color:#333">-</div>
+        </div>
+        <div>
+          <div class="small">Registered on</div>
+          <div id="user-created" style="font-weight:bold;color:#333">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="label">Upcoming Appointments</span>
+      <div class="appointment-list" id="appointment-list">
+        <div class="small">Loading appointments...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // fetch profile & appointments after load (server renders current user into session)
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/me');
+        if (!res.ok) { window.location = '/login'; return; }
+        const data = await res.json();
+        const u = data.user;
+        document.getElementById('user-fullname').textContent = u.full_name || u.username;
+        document.getElementById('user-email-phone').textContent = (u.email || '') + ' • ' + (u.phone || '');
+        document.getElementById('user-dob').textContent = u.dob || '-';
+        document.getElementById('user-age').textContent = u.age || '-';
+        document.getElementById('user-created').textContent = new Date(u.created_at).toLocaleString();
+
+        // avatar letters
+        const letters = (u.full_name || u.username || 'JD').split(' ').map(s=>s[0]).slice(0,2).join('').toUpperCase();
+        document.getElementById('avatar-letters').textContent = letters;
+
+        // appointments
+        const ares = await fetch('/api/my-appointments');
+        const aj = await ares.json();
+        const listEl = document.getElementById('appointment-list');
+        listEl.innerHTML = '';
+        if (!aj.appointments || aj.appointments.length === 0) {
+          listEl.innerHTML = '<div class="small">No upcoming appointments.</div>';
+        } else {
+          aj.appointments.forEach(ap => {
+            const apEl = document.createElement('div');
+            apEl.className = 'appt';
+            apEl.innerHTML = `
+              <div class="appt-left">
+                <div style="font-weight:bold;color:#00796b">${ap.doctor_name} • ${ap.specialty}</div>
+                <div class="small">${new Date(ap.date).toLocaleDateString()} • ${ap.time}</div>
+                ${ap.notes ? `<div class="small" style="margin-top:6px">${ap.notes}</div>` : ''}
+              </div>
+              <div style="text-align:right">
+                <div class="small">Booked: ${new Date(ap.created_at).toLocaleString()}</div>
+                <div style="margin-top:10px">
+                  <button class="btn" onclick="editAppt('${ap.id}')">Edit</button>
+                  <button class="btn" onclick="deleteAppt('${ap.id}')">Delete</button>
+                </div>
+              </div>
+            `;
+            listEl.appendChild(apEl);
+          });
+        }
+      } catch (e) {
+        console.error(e);
+        window.location = '/login';
+      }
+    }
+
+    function editAppt(id) { window.location = '/appointments_page?edit=' + id; }
+    async function deleteAppt(id){
+      if(!confirm('Delete appointment?')) return;
+      const r = await fetch('/api/appointments/' + id, { method:'DELETE' });
+      if (r.ok) { loadDashboard(); } else { alert('Delete failed'); }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

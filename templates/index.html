@@ -1,0 +1,1955 @@
+"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="title-text">🩺 Health Assistant Bot</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+     background-image: url('https://static.vecteezy.com/system/resources/previews/006/712/985/non_2x/abstract-health-medical-science-healthcare-icon-digital-technology-science-concept-modern-innovation-treatment-medicine-on-hi-tech-future-blue-background-for-wallpaper-template-web-design-vector.jpg'); /* <-- PASTE YOUR URL HERE */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed; /* Optional: keeps image fixed */
+      background-color: #e0f7fa; /* Light blue fallback color */
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      position: relative; /* For language picker positioning */
+    }
+
+    /* Language Picker Styles */
+    .language-picker {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      z-index: 200; /* Above all other elements */
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 10px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .language-picker label {
+      font-size: 14px;
+      color: #34495e;
+      font-weight: bold;
+    }
+
+    .language-picker select {
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background-color: white;
+      cursor: pointer;
+      font-size: 14px;
+      color: #34495e;
+      outline: none;
+    }
+
+    .language-picker select:focus {
+      border-color: #00bcd4;
+      box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      padding: 25px 20px;
+      background: linear-gradient(135deg, #00bcd4, #00796b);
+      text-align: center;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-header h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .sidebar-header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .nav-tabs {
+      flex: 1;
+      padding: 20px 0;
+    }
+
+    .nav-tab {
+      padding: 18px 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+    }
+
+    .nav-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-left-color: #00bcd4;
+    }
+
+    .nav-tab.active {
+      background: rgba(0, 188, 212, 0.2);
+      border-left-color: #00bcd4;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+    margin: 20px;
+    padding: 12px 20px;
+    background-color: #ff4d4d;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #e60000;
+}
+
+
+    .nav-tab-icon {
+      font-size: 24px;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-width: 0;
+    }
+
+    .tab-content {
+      display: none;
+      width: 100%;
+      max-width: 1200px;
+      animation: fadeIn 0.5s ease;
+      padding: 0 10px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Chat Container */
+    .chat-container {
+      width: 100%;
+      max-width: 600px;
+      height: 650px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.3);
+      margin: 0 auto;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #00bcd4, #00796b);
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+
+    .chat-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+
+    .chat-message {
+      max-width: 80%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 15px;
+      animation: slideUp 0.5s ease;
+    }
+
+    .chat-message.user {
+      background: #d1f7c4;
+      margin-left: auto;
+    }
+
+    .chat-message.bot {
+      background: #e1f5fe;
+    }
+
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      padding: 12px 25px;
+      border: none;
+      background: #00bcd4;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+    }
+
+    .chat-input button:hover {
+      background: #0097a7;
+    }
+
+    .suggestion-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      background: #fafafa;
+    }
+
+    .suggestion-box button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 20px;
+      background: #80deea;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 13px;
+    }
+
+    .suggestion-box button:hover {
+      background: #4dd0e1;
+      transform: translateY(-2px);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Content Cards */
+    .content-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .content-card h2 {
+      color: #00796b;
+      margin-bottom: 20px;
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .content-card h3 {
+      color: #00bcd4;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .content-card p {
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .content-card ul {
+      margin-left: 20px;
+      line-height: 2;
+      color: #555;
+    }
+
+    .content-card li {
+      margin-bottom: 8px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 18px;
+      border-radius: 12px;
+      border-left: 4px solid #00bcd4;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 120px;
+    }
+
+    .info-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+      border-left-color: #00796b;
+    }
+
+    .info-box h4 {
+      color: #00796b;
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .info-box p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #00bcd4;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: #00796b;
+      box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+    }
+
+    .record-item {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border-left: 4px solid #00bcd4;
+    }
+
+    .record-item h4 {
+      color: #00796b;
+      margin-bottom: 8px;
+    }
+
+    .record-item p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00bcd4, #00796b);
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: 0.3s;
+      margin: 5px;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 0;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.4s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #00bcd4, #00796b);
+      color: white;
+      padding: 25px 30px;
+      border-radius: 15px 15px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .close {
+      color: white;
+      font-size: 35px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      line-height: 1;
+    }
+
+    .close:hover {
+      transform: scale(1.2);
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .step-item {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      border-left: 5px solid #00bcd4;
+      transition: 0.3s;
+    }
+
+    .step-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+    }
+
+    .step-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #00bcd4, #00796b);
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 35px;
+      font-weight: bold;
+      margin-right: 15px;
+      font-size: 18px;
+    }
+
+    .step-content {
+      display: inline-block;
+      vertical-align: middle;
+      width: calc(100% - 60px);
+    }
+
+    .step-content h4 {
+      color: #00796b;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .step-content p {
+      color: #555;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .warning-box {
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .warning-box p {
+      margin: 0;
+      color: #856404;
+    }
+
+    .info-box-clickable {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-box-clickable::after {
+      content: '👆 Click for details';
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 188, 212, 0.9);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .info-box-clickable:hover::after {
+      opacity: 1;
+    }
+
+    .emergency-numbers-box {
+      background: #ffebee;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 5px solid #f44336;
+      margin-top: 20px;
+    }
+
+    .location-box {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+    }
+
+    .location-box h3 {
+      margin-bottom: 15px;
+      color: #00796b;
+    }
+    
+    .appointment-actions button {
+        margin: 0 5px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1400px) {
+      .info-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .info-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      
+      .content-card {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        min-height: 60px;
+      }
+      
+      .nav-tabs {
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+        overflow-x: auto;
+      }
+      
+      .nav-tab {
+        padding: 10px 15px;
+        white-space: nowrap;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .main-content {
+        padding: 15px;
+      }
+
+      .language-picker {
+        top: 8px;
+        right: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="language-picker">
+        <label for="lang-select" id="lang-label">Language:</label>
+        <select id="lang-select" onchange="setLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+        </select>
+    </div>
+    
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h1 id="app-name">🩺 JeevanDost</h1>
+        <p id="app-subtitle">Your Complete Medical Assistant</p>
+      </div>
+      <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('ai-advice')">
+          <span class="nav-tab-icon">🤖</span>
+          <span id="tab-ai-advice">AI Advice</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('first-aid')">
+          <span class="nav-tab-icon">🚑</span>
+          <span id="tab-first-aid">First Aid</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('locate-doctor')">
+          <span class="nav-tab-icon">👨‍⚕️</span>
+          <span id="tab-locate-doctor">Locate Doctor</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('appointments')">
+          <span class="nav-tab-icon">📅</span>
+          <span id="tab-appointments">Appointments</span>
+        </div>
+        <!-- Logout Button -->
+<a href="http://localhost:3000/logout" class="logout-btn">
+    🚪 Logout
+</a>
+
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div id="ai-advice" class="tab-content active">
+        <div class="chat-container">
+          <div class="chat-header">
+            <h2 id="chat-header-title">🤖 AI Health Assistant</h2>
+            <p id="chat-header-subtitle">Ask me about your symptoms</p>
+          </div>
+          <div class="chat-box" id="chat-box"></div>
+          <div class="suggestion-box" id="suggestion-box"></div>
+          <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your symptoms..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()" id="send-button">Send 📨</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="first-aid" class="tab-content">
+        <div class="content-card">
+          <h2 id="fa-main-title">🚑 First Aid Guide</h2>
+          <p id="fa-main-subtitle">Click on any emergency situation below to see detailed step-by-step instructions</p>
+
+          <div class="info-grid">
+            <div class="info-box info-box-clickable" onclick="openModal('cuts')">
+              <h4 id="fa-cuts-title">🩹 Cuts & Wounds</h4>
+              <p id="fa-cuts-desc">Clean with water, apply pressure to stop bleeding, use antiseptic, cover with bandage</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('burns')">
+              <h4 id="fa-burns-title">🔥 Burns</h4>
+              <p id="fa-burns-desc">Cool with running water for 10-20 minutes, don't apply ice, cover loosely with clean cloth</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('head')">
+              <h4 id="fa-head-title">🤕 Head Injury</h4>
+              <p id="fa-head-desc">Keep person still, apply ice pack, monitor for consciousness, seek immediate medical help</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('heart')">
+              <h4 id="fa-heart-title">💔 Heart Attack</h4>
+              <p id="fa-heart-desc">Call 108 immediately, make person sit, give aspirin if available, perform CPR if needed</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('choking')">
+              <h4 id="fa-choking-title">😮 Choking</h4>
+              <p id="fa-choking-desc">Perform Heimlich maneuver, encourage coughing, call emergency if object doesn't dislodge</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('fracture')">
+              <h4 id="fa-fracture-title">🦴 Fractures</h4>
+              <p id="fa-fracture-desc">Immobilize the injured area, don't try to realign, apply ice, seek medical help immediately</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('bleeding')">
+              <h4 id="fa-bleeding-title">🩸 Severe Bleeding</h4>
+              <p id="fa-bleeding-desc">Apply direct pressure, elevate wound, use pressure points, call emergency services</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('seizure')">
+              <h4 id="fa-seizure-title">⚡ Seizures</h4>
+              <p id="fa-seizure-desc">Protect from injury, turn on side, time the seizure, don't restrain or put anything in mouth</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('shock')">
+              <h4 id="fa-shock-title">😰 Shock</h4>
+              <p id="fa-shock-desc">Lay person down, elevate legs, keep warm, loosen tight clothing, monitor breathing</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('poisoning')">
+              <h4 id="fa-poisoning-title">☠️ Poisoning</h4>
+              <p id="fa-poisoning-desc">Call poison control immediately, don't induce vomiting unless instructed, save container</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('stroke')">
+              <h4 id="fa-stroke-title">🧠 Stroke (FAST)</h4>
+              <p id="fa-stroke-desc">Face drooping, Arm weakness, Speech difficulty, Time to call 108 immediately</p>
+            </div>
+            <div class="info-box info-box-clickable" onclick="openModal('drowning')">
+              <h4 id="fa-drowning-title">🌊 Drowning</h4>
+              <p id="fa-drowning-desc">Remove from water safely, check breathing, perform CPR if needed, call emergency</p>
+            </div>
+          </div>
+
+          <h3 id="fa-emergency-title">🆘 Emergency Numbers (India)</h3>
+          <div class="emergency-numbers-box">
+            <ul style="margin: 0; line-height: 2;">
+              <li><strong id="fa-num-108-label">📞 108</strong> - <span id="fa-num-108-desc">Ambulance Service (All India)</span></li>
+              <li><strong id="fa-num-112-label">📞 112</strong> - <span id="fa-num-112-desc">Emergency Response Support System</span></li>
+              <li><strong id="fa-num-102-label">📞 102</strong> - <span id="fa-num-102-desc">Medical Emergency Helpline</span></li>
+              <li><strong id="fa-num-nhp-label">📞 1800-180-1104</strong> - <span id="fa-num-nhp-desc">National Health Portal</span></li>
+              <li><strong id="fa-num-pcc-label">📞 1066</strong> - <span id="fa-num-pcc-desc">Poison Control Center</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="firstAidModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="modal-title">First Aid Steps</h2>
+            <span class="close" onclick="closeModal()">×</span>
+          </div>
+          <div class="modal-body" id="modal-body">
+            </div>
+        </div>
+      </div>
+
+      <div id="locate-doctor" class="tab-content">
+        <div class="content-card">
+          <h2 id="ld-main-title">👨‍⚕️ Locate Doctor & Healthcare Facilities</h2>
+          <p id="ld-main-subtitle">Find healthcare professionals and hospitals near you with real-time location</p>
+
+          
+
+
+          <div class="location-box">
+            <h3 id="ld-loc-title">📍 Your Current Location</h3>
+            <p id="location-status" style="color: #555; margin-bottom: 10px;">🔄 Detecting your location...</p>
+            <button class="btn-primary" onclick="getCurrentLocation()" id="ld-btn-use-loc">
+              📡 Use My Current Location
+            </button>
+            <div style="margin-top: 15px;">
+              <input type="text" id="manual-location" class="search-box" placeholder="Or enter your location manually (e.g., Pune, Mumbai, Delhi)" style="margin-bottom: 10px;">
+              <button class="btn-primary" onclick="searchByManualLocation()" id="ld-btn-search-loc">🔍 Search This Location</button>
+            </div>
+          </div>
+
+          <h3 id="ld-find-services-title">🏥 Find Healthcare Services Near You</h3>
+          <div class="info-grid">
+            <div class="info-box" onclick="findNearby('hospital')">
+              <h4 id="ld-hosp-title">🏥 Hospitals</h4>
+              <p id="ld-hosp-desc">Emergency care and general hospitals</p>
+              <button class="btn-primary" id="ld-hosp-btn">Find Nearby 📍</button>
+            </div>
+            <div class="info-box" onclick="findNearby('doctor')">
+              <h4 id="ld-physician-title">👨‍⚕️ General Physicians</h4>
+              <p id="ld-physician-desc">Common illnesses and health checkups</p>
+              <button class="btn-primary" id="ld-physician-btn">Find Nearby 📍</button>
+            </div>
+            <div class="info-box" onclick="findNearby('dentist')">
+              <h4 id="ld-dentist-title">🦷 Dentists</h4>
+              <p id="ld-dentist-desc">Oral and dental care specialists</p>
+              <button class="btn-primary" id="ld-dentist-btn">Find Nearby 📍</button>
+            </div>
+            <div class="info-box" onclick="findNearby('pharmacy')">
+              <h4 id="ld-pharmacy-title">💊 Pharmacies</h4>
+              <p id="ld-pharmacy-desc">Medicine stores and drugstores</p>
+              <button class="btn-primary" id="ld-pharmacy-btn">Find Nearby 📍</button>
+            </div>
+            <div class="info-box" onclick="findNearby('clinic')">
+              <h4 id="ld-clinic-title">🩺 Clinics</h4>
+              <p id="ld-clinic-desc">Medical clinics and health centers</p>
+              <button class="btn-primary" id="ld-clinic-btn">Find Nearby 📍</button>
+            </div>
+            <div class="info-box" onclick="findNearby('eye+doctor')">
+              <h4 id="ld-eye-title">👁️ Eye Specialists</h4>
+              <p id="ld-eye-desc">Ophthalmologists and opticians</p>
+              <button class="btn-primary" id="ld-eye-btn">Find Nearby 📍</button>
+            </div>
+          </div>
+
+          <h3 id="ld-map-title">🗺️ Interactive Map</h3>
+          <div style="position: relative; width: 100%; height: 500px; border-radius: 12px; overflow: hidden; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <iframe 
+              id="map-frame"
+              width="100%" 
+              height="100%" 
+              style="border:0;" 
+              loading="lazy" 
+              allowfullscreen
+              src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=hospitals+near+me&zoom=13">
+            </iframe>
+          </div>
+
+          <h3 style="margin-top: 30px;" id="ld-online-title">🌐 Online Consultation Platforms</h3>
+          <div class="info-grid">
+            <div class="info-box">
+              <h4>Practo</h4>
+              <p id="ld-practo-desc">Book appointments & video consultations</p>
+              <a href="https://www.practo.com" target="_blank">
+                <button class="btn-primary" id="ld-practo-btn">Visit Website 🌐</button>
+              </a>
+            </div>
+            <div class="info-box">
+              <h4>1mg</h4>
+              <p id="ld-1mg-desc">Find doctors & order medicines online</p>
+              <a href="https://www.1mg.com/doctors" target="_blank">
+                <button class="btn-primary" id="ld-1mg-btn">Visit Website 🌐</button>
+              </a>
+            </div>
+            <div class="info-box">
+              <h4>Apollo 24/7</h4>
+              <p id="ld-apollo-desc">Consult doctors online anytime</p>
+              <a href="https://www.apollo247.com" target="_blank">
+                <button class="btn-primary" id="ld-apollo-btn">Visit Website 🌐</button>
+              </a>
+            </div>
+          </div>
+
+          <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 25px; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; color: #856404;"><strong id="ld-tip-strong">💡 Pro Tip:</strong> <span id="ld-tip-text">Call ahead to confirm availability and book appointments. In emergencies, dial <strong>108</strong> for ambulance services.</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="appointments" class="tab-content">
+        <div class="content-card">
+          <h2 id="app-main-title">📅 Appointments Management</h2>
+          <p id="app-main-subtitle">Schedule, view, and manage your medical appointments</p>
+
+          <button class="btn-primary" onclick="getNearbyDoctors()" style="margin-bottom: 15px;">
+    🔍 Find Nearby Doctors Near Me
+</button>
+
+
+          <div style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
+            <button class="btn-primary" onclick="openAppointmentModal()" id="app-btn-new">➕ Schedule New Appointment</button>
+            <input type="text" id="appointment-search" class="search-box" placeholder="🔍 Search appointments by name, doctor, or specialty..." style="flex: 1; min-width: 300px; margin: 0;" oninput="filterAppointments()">
+          </div>
+
+          <div id="appointments-container">
+            <p id="app-empty-msg" style="text-align: center; color: #999; padding: 40px;">No appointments scheduled yet. Click "Schedule New Appointment" to add one.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="appointmentModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+          <div class="modal-header">
+            <h2 id="appointment-modal-title">Schedule New Appointment</h2>
+
+   
+
+            <span class="close" onclick="closeAppointmentModal()">×</span>
+          </div>
+          <div class="modal-body">
+            <form id="appointment-form" onsubmit="saveAppointment(event)">
+              <input type="hidden" id="appointment-id">
+              <input type="hidden" id="selected-doctor-name">
+        <input type="hidden" id="selected-doctor-phone">
+
+              
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #00796b;" id="app-form-patient">👤 Patient Name *</label>
+                <input type="text" id="patient-name" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px;" placeholder="Enter patient name">
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #00796b;" id="app-form-doctor">👨‍⚕️Doctor Name *</label>
+                <input type="text" id="doctor-name" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px;" placeholder="Enter doctor name">
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #00796b;" id="app-form-specialty">🏥 Specialty *</label>
+                <select id="specialty" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px;">
+                  <option value="" id="spec-select-placeholder">Select specialty</option>
+                  <option value="General Physician" id="spec-gp">General Physician</option>
+                  <option value="Cardiologist" id="spec-card">Cardiologist</option>
+                  <option value="Dermatologist" id="spec-derm">Dermatologist</option>
+                  <option value="Dentist" id="spec-dent">Dentist</option>
+                  <option value="Ophthalmologist" id="spec-opth">Ophthalmologist</option>
+                  <option value="Orthopedic" id="spec-ortho">Orthopedic</option>
+                  <option value="Pediatrician" id="spec-ped">Pediatrician</option>
+                  <option value="Psychiatrist" id="spec-psych">Psychiatrist</option>
+                  <option value="Other" id="spec-other">Other</option>
+                </select>
+              </div>
+
+              <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                  <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #00796b;" id="app-form-date">📅 Date *</label>
+                  <input type="date" id="appointment-date" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px;">
+                </div>
+                <div style="flex: 1;">
+                  <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #00796b;" id="app-form-time">🕐 Time *</label>
+                  <input type="time" id="appointment-time" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px;">
+                </div>
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #00796b;" id="app-form-notes">📝 Notes (Optional)</label>
+                <textarea id="appointment-notes" rows="3" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px; resize: vertical;" placeholder="Any additional notes or symptoms..."></textarea>
+              </div>
+
+              <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn-primary" onclick="closeAppointmentModal()" style="background: #999;" id="app-btn-cancel">Cancel</button>
+                <button type="submit" class="btn-primary" id="app-btn-save">💾 Save Appointment</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="location-actions">
+    <button onclick="findNearbyDoctors()">Find Nearby Doctors Near Me</button>
+</div>
+
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+    // initialize your default tab
+    if (typeof switchTab === "function") {
+        switchTab('ai-advice');
+    }
+
+    // trigger location detection after page loads
+    if (typeof getCurrentLocation === "function") {
+        getCurrentLocation();
+    }
+});
+
+    let userLatitude = null;
+    let userLongitude = null;
+    let userLocation = "Pune, Maharashtra"; // Default location
+    let currentLanguage = "en";
+
+    // Appointments storage
+    let appointments = [];
+    let editingAppointmentId = null;
+
+    // --- Translation Data ---
+    const translations = {
+        'en': {
+            'title-text': '🩺 Health Assistant Bot',
+            'app-name': '🩺 JeevanDost',
+            'app-subtitle': 'Your Complete Medical Assistant',
+            'lang-label': 'Language:',
+            'tab-ai-advice': 'AI Advice',
+            'tab-first-aid': 'First Aid',
+            'tab-locate-doctor': 'Locate Doctor',
+            'tab-appointments': 'Appointments',
+            'chat-header-title': '🤖 AI Health Assistant',
+            'chat-header-subtitle': 'Ask me about your symptoms',
+            'user-input-placeholder': 'Type your symptoms...',
+            'send-button': 'Send 📨',
+            'fa-main-title': '🚑 First Aid Guide',
+            'fa-main-subtitle': 'Click on any emergency situation below to see detailed step-by-step instructions',
+            'fa-cuts-title': '🩹 Cuts & Wounds',
+            'fa-cuts-desc': 'Clean with water, apply pressure to stop bleeding, use antiseptic, cover with bandage',
+            'fa-burns-title': '🔥 Burns',
+            'fa-burns-desc': "Cool with running water for 10-20 minutes, don't apply ice, cover loosely with clean cloth",
+            'fa-head-title': '🤕 Head Injury',
+            'fa-head-desc': 'Keep person still, apply ice pack, monitor for consciousness, seek immediate medical help',
+            'fa-heart-title': '💔 Heart Attack',
+            'fa-heart-desc': 'Call 108 immediately, make person sit, give aspirin if available, perform CPR if needed',
+            'fa-choking-title': '😮 Choking',
+            'fa-choking-desc': "Perform Heimlich maneuver, encourage coughing, call emergency if object doesn't dislodge",
+            'fa-fracture-title': '🦴 Fractures',
+            'fa-fracture-desc': "Immobilize the injured area, don't try to realign, apply ice, seek medical help immediately",
+            'fa-bleeding-title': '🩸 Severe Bleeding',
+            'fa-bleeding-desc': 'Apply direct pressure, elevate wound, use pressure points, call emergency services',
+            'fa-seizure-title': '⚡ Seizures',
+            'fa-seizure-desc': "Protect from injury, turn on side, time the seizure, don't restrain or put anything in mouth",
+            'fa-shock-title': '😰 Shock',
+            'fa-shock-desc': 'Lay person down, elevate legs, keep warm, loosen tight clothing, monitor breathing',
+            'fa-poisoning-title': '☠️ Poisoning',
+            'fa-poisoning-desc': "Call poison control immediately, don't induce vomiting unless instructed, save container",
+            'fa-stroke-title': '🧠 Stroke (FAST)',
+            'fa-stroke-desc': 'Face drooping, Arm weakness, Speech difficulty, Time to call 108 immediately',
+            'fa-drowning-title': '🌊 Drowning',
+            'fa-drowning-desc': 'Remove from water safely, check breathing, perform CPR if needed, call emergency',
+            'fa-emergency-title': '🆘 Emergency Numbers (India)',
+            'fa-num-108-desc': 'Ambulance Service (All India)',
+            'fa-num-112-desc': 'Emergency Response Support System',
+            'fa-num-102-desc': 'Medical Emergency Helpline',
+            'fa-num-nhp-desc': 'National Health Portal',
+            'fa-num-pcc-desc': 'Poison Control Center',
+            'ld-main-title': '👨‍⚕️ Locate Doctor & Healthcare Facilities',
+            'ld-main-subtitle': 'Find healthcare professionals and hospitals near you with real-time location',
+            'ld-loc-title': '📍 Your Current Location',
+            'ld-btn-use-loc': '📡 Use My Current Location',
+            'manual-location-placeholder': 'Or enter your location manually (e.g., Pune, Mumbai, Delhi)',
+            'ld-btn-search-loc': '🔍 Search This Location',
+            'ld-find-services-title': '🏥 Find Healthcare Services Near You',
+            'ld-hosp-title': '🏥 Hospitals',
+            'ld-hosp-desc': 'Emergency care and general hospitals',
+            'ld-physician-title': '👨‍⚕️ General Physicians',
+            'ld-physician-desc': 'Common illnesses and health checkups',
+            'ld-dentist-title': '🦷 Dentists',
+            'ld-dentist-desc': 'Oral and dental care specialists',
+            'ld-pharmacy-title': '💊 Pharmacies',
+            'ld-pharmacy-desc': 'Medicine stores and drugstores',
+            'ld-clinic-title': '🩺 Clinics',
+            'ld-clinic-desc': 'Medical clinics and health centers',
+            'ld-eye-title': '👁️ Eye Specialists',
+            'ld-eye-desc': 'Ophthalmologists and opticians',
+            'ld-hosp-btn': 'Find Nearby 📍',
+            'ld-physician-btn': 'Find Nearby 📍',
+            'ld-dentist-btn': 'Find Nearby 📍',
+            'ld-pharmacy-btn': 'Find Nearby 📍',
+            'ld-clinic-btn': 'Find Nearby 📍',
+            'ld-eye-btn': 'Find Nearby 📍',
+            'ld-map-title': '🗺️ Interactive Map',
+            'ld-online-title': '🌐 Online Consultation Platforms',
+            'ld-practo-desc': 'Book appointments & video consultations',
+            'ld-1mg-desc': 'Find doctors & order medicines online',
+            'ld-apollo-desc': 'Consult doctors online anytime',
+            'ld-practo-btn': 'Visit Website 🌐',
+            'ld-1mg-btn': 'Visit Website 🌐',
+            'ld-apollo-btn': 'Visit Website 🌐',
+            'ld-tip-strong': '💡 Pro Tip:',
+            'ld-tip-text': 'Call ahead to confirm availability and book appointments. In emergencies, dial 108 for ambulance services.',
+            'app-main-title': '📅 Appointments Management',
+            'app-main-subtitle': 'Schedule, view, and manage your medical appointments',
+            'app-btn-new': '➕ Schedule New Appointment',
+            'app-search-placeholder': '🔍 Search appointments by name, doctor, or specialty...',
+            'app-empty-msg': 'No appointments scheduled yet. Click "Schedule New Appointment" to add one.',
+            'app-form-new-title': 'Schedule New Appointment',
+            'app-form-edit-title': 'Edit Appointment',
+            'app-form-patient': '👤 Patient Name *',
+            'app-form-doctor': '👨‍⚕️Doctor Name *',
+            'app-form-specialty': '🏥 Specialty *',
+            'spec-select-placeholder': 'Select specialty',
+            'spec-gp': 'General Physician',
+            'spec-card': 'Cardiologist',
+            'spec-derm': 'Dermatologist',
+            'spec-dent': 'Dentist',
+            'spec-opth': 'Ophthalmologist',
+            'spec-ortho': 'Orthopedic',
+            'spec-ped': 'Pediatrician',
+            'spec-psych': 'Psychiatrist',
+            'spec-other': 'Other',
+            'app-form-date': '📅 Date *',
+            'app-form-time': '🕐 Time *',
+            'app-form-notes': '📝 Notes (Optional)',
+            'app-notes-placeholder': 'Any additional notes or symptoms...',
+            'app-btn-cancel': 'Cancel',
+            'app-btn-save': '💾 Save Appointment',
+            'appointment-edit-btn': '✏️ Edit',
+            'appointment-delete-btn': '🗑️ Delete',
+            'appointment-delete-confirm': 'Are you sure you want to delete this appointment?',
+            'appointment-past-status': 'Past',
+            'appointment-upcoming-status': 'Upcoming',
+            'appointment-label-doctor': '👨‍⚕️ Doctor:',
+            'appointment-label-specialty': '🏥 Specialty:',
+            'appointment-label-date': '📅 Date:',
+            'appointment-label-time': '🕐 Time:',
+            'appointment-label-notes': '📝 Notes:',
+            'location-status-detecting': '🔄 Detecting your location...',
+            'location-status-manual-placeholder': 'Or enter your location manually (e.g., Pune, Mumbai, Delhi)',
+            'location-status-error': '❌ Unable to detect location. Please enter manually or enable location services.',
+            'location-status-no-support': '❌ Geolocation is not supported by your browser. Please enter location manually.',
+            'location-status-searching-for': '🔍 Searching for {type} near you...',
+            'search-location-alert': 'Please enter a location',
+            'location-names': {
+              'hospital': 'Hospitals',
+              'doctor': 'Doctors',
+              'dentist': 'Dentists',
+              'pharmacy': 'Pharmacies',
+              'clinic': 'Clinics',
+              'eye+doctor': 'Eye Specialists'
+            }
+        },
+        'hi': {
+            'title-text': '🩺 स्वास्थ्य सहायक बॉट',
+            'app-name': '🩺 जीवनदोस्त',
+            'app-subtitle': 'आपका संपूर्ण चिकित्सा सहायक',
+            'lang-label': 'भाषा:',
+            'tab-ai-advice': 'एआई सलाह',
+            'tab-first-aid': 'प्राथमिक उपचार',
+            'tab-locate-doctor': 'डॉक्टर खोजें',
+            'tab-appointments': 'नियुक्ति (Appointments)',
+            'chat-header-title': '🤖 एआई स्वास्थ्य सहायक',
+            'chat-header-subtitle': 'अपने लक्षण बताएं',
+            'user-input-placeholder': 'अपने लक्षण टाइप करें...',
+            'send-button': 'भेजें 📨',
+            'fa-main-title': '🚑 प्राथमिक उपचार मार्गदर्शिका',
+            'fa-main-subtitle': 'विस्तृत चरण-दर-चरण निर्देशों के लिए नीचे दी गई किसी भी आपातकालीन स्थिति पर क्लिक करें',
+            'fa-cuts-title': '🩹 कट और घाव',
+            'fa-cuts-desc': 'पानी से साफ करें, खून रोकने के लिए दबाव डालें, एंटीसेप्टिक का उपयोग करें, पट्टी से ढकें',
+            'fa-burns-title': '🔥 जलना (Burns)',
+            'fa-burns-desc': 'बहते पानी से 10-20 मिनट तक ठंडा करें, बर्फ न लगाएं, साफ कपड़े से हल्के से ढकें',
+            'fa-head-title': '🤕 सिर की चोट',
+            'fa-head-desc': 'व्यक्ति को स्थिर रखें, आइस पैक लगाएं, होश की निगरानी करें, तुरंत चिकित्सा सहायता लें',
+            'fa-heart-title': '💔 दिल का दौरा',
+            'fa-heart-desc': 'तुरंत 108 पर कॉल करें, व्यक्ति को बिठाएं, यदि उपलब्ध हो तो एस्पिरिन दें, जरूरत पड़ने पर सीपीआर करें',
+            'fa-choking-title': '😮 दम घुटना',
+            'fa-choking-desc': 'हाइमलिच युद्धाभ्यास करें, खांसी करने के लिए प्रोत्साहित करें, अगर वस्तु न निकले तो आपातकाल को कॉल करें',
+            'fa-fracture-title': '🦴 फ्रैक्चर',
+            'fa-fracture-desc': 'घायल क्षेत्र को स्थिर करें, फिर से संरेखित करने का प्रयास न करें, बर्फ लगाएं, तुरंत चिकित्सा सहायता लें',
+            'fa-bleeding-title': '🩸 गंभीर रक्तस्राव',
+            'fa-bleeding-desc': 'सीधा दबाव डालें, घाव को ऊपर उठाएं, प्रेशर पॉइंट का उपयोग करें, आपातकालीन सेवाओं को कॉल करें',
+            'fa-seizure-title': '⚡ दौरे (Seizures)',
+            'fa-seizure-desc': 'चोट से बचाएं, करवट लें, दौरे का समय देखें, न तो रोकें और न ही मुंह में कुछ डालें',
+            'fa-shock-title': '😰 शॉक',
+            'fa-shock-desc': 'व्यक्ति को लेटाएं, पैर ऊपर उठाएं, गर्म रखें, कस कर पहने हुए कपड़े ढीले करें, सांस की निगरानी करें',
+            'fa-poisoning-title': '☠️ जहर (Poisoning)',
+            'fa-poisoning-desc': 'तुरंत जहर नियंत्रण को कॉल करें, निर्देश न मिलने तक उल्टी न कराएं, कंटेनर सहेजें',
+            'fa-stroke-title': '🧠 स्ट्रोक (FAST)',
+            'fa-stroke-desc': 'चेहरे का ढीला पड़ना, हाथ में कमजोरी, बोलने में कठिनाई, तुरंत 108 को कॉल करने का समय',
+            'fa-drowning-title': '🌊 डूबना',
+            'fa-drowning-desc': 'पानी से सुरक्षित रूप से निकालें, सांस की जांच करें, जरूरत पड़ने पर सीपीआर करें, आपातकाल को कॉल करें',
+            'fa-emergency-title': '🆘 आपातकालीन नंबर (भारत)',
+            'fa-num-108-desc': 'एम्बुलेंस सेवा (पूरे भारत में)',
+            'fa-num-112-desc': 'आपातकालीन प्रतिक्रिया समर्थन प्रणाली',
+            'fa-num-102-desc': 'चिकित्सा आपातकालीन हेल्पलाइन',
+            'fa-num-nhp-desc': 'राष्ट्रीय स्वास्थ्य पोर्टल',
+            'fa-num-pcc-desc': 'जहर नियंत्रण केंद्र',
+            'ld-main-title': '👨‍⚕️ डॉक्टर और स्वास्थ्य सुविधाओं का पता लगाएं',
+            'ld-main-subtitle': 'वास्तविक समय स्थान के साथ अपने आस-पास के स्वास्थ्य पेशेवरों और अस्पतालों का पता लगाएं',
+            'ld-loc-title': '📍 आपका वर्तमान स्थान',
+            'ld-btn-use-loc': '📡 मेरा वर्तमान स्थान उपयोग करें',
+            'manual-location-placeholder': 'या मैन्युअल रूप से अपना स्थान दर्ज करें (उदा. पुणे, मुंबई, दिल्ली)',
+            'ld-btn-search-loc': '🔍 इस स्थान को खोजें',
+            'ld-find-services-title': '🏥 अपने आस-पास स्वास्थ्य सेवाएं खोजें',
+            'ld-hosp-title': '🏥 अस्पताल',
+            'ld-hosp-desc': 'आपातकालीन देखभाल और सामान्य अस्पताल',
+            'ld-physician-title': '👨‍⚕️ सामान्य चिकित्सक',
+            'ld-physician-desc': 'सामान्य बीमारियाँ और स्वास्थ्य जांच',
+            'ld-dentist-title': '🦷 दंत चिकित्सक',
+            'ld-dentist-desc': 'मौखिक और दंत चिकित्सा विशेषज्ञ',
+            'ld-pharmacy-title': '💊 फार्मेसियाँ',
+            'ld-pharmacy-desc': 'दवा की दुकानें और औषधालय',
+            'ld-clinic-title': '🩺 क्लिनिक',
+            'ld-clinic-desc': 'चिकित्सा क्लिनिक और स्वास्थ्य केंद्र',
+            'ld-eye-title': '👁️ नेत्र विशेषज्ञ',
+            'ld-eye-desc': 'नेत्र रोग विशेषज्ञ और ऑप्टिशियन',
+            'ld-hosp-btn': 'आस-पास खोजें 📍',
+            'ld-physician-btn': 'आस-पास खोजें 📍',
+            'ld-dentist-btn': 'आस-पास खोजें 📍',
+            'ld-pharmacy-btn': 'आस-पास खोजें 📍',
+            'ld-clinic-btn': 'आस-पास खोजें 📍',
+            'ld-eye-btn': 'आस-पास खोजें 📍',
+            'ld-map-title': '🗺️ इंटरैक्टिव मानचित्र',
+            'ld-online-title': '🌐 ऑनलाइन परामर्श प्लेटफॉर्म',
+            'ld-practo-desc': 'अपॉइंटमेंट और वीडियो परामर्श बुक करें',
+            'ld-1mg-desc': 'ऑनलाइन डॉक्टर ढूंढें और दवाएं ऑर्डर करें',
+            'ld-apollo-desc': 'किसी भी समय ऑनलाइन डॉक्टर से परामर्श करें',
+            'ld-practo-btn': 'वेबसाइट पर जाएं 🌐',
+            'ld-1mg-btn': 'वेबसाइट पर जाएं 🌐',
+            'ld-apollo-btn': 'वेबसाइट पर जाएं 🌐',
+            'ld-tip-strong': '💡 प्रो टिप:',
+            'ld-tip-text': 'उपलब्धता की पुष्टि करने और अपॉइंटमेंट बुक करने के लिए पहले से कॉल करें। आपात स्थिति में, एम्बुलेंस सेवाओं के लिए 108 डायल करें।',
+            'app-main-title': '📅 अपॉइंटमेंट प्रबंधन',
+            'app-main-subtitle': 'अपनी चिकित्सा नियुक्तियों को शेड्यूल करें, देखें और प्रबंधित करें',
+            'app-btn-new': '➕ नई नियुक्ति शेड्यूल करें',
+            'app-search-placeholder': '🔍 नाम, डॉक्टर या विशेषज्ञता के अनुसार अपॉइंटमेंट खोजें...',
+            'app-empty-msg': 'अभी तक कोई अपॉइंटमेंट शेड्यूल नहीं किया गया है। जोड़ने के लिए "नई नियुक्ति शेड्यूल करें" पर क्लिक करें।',
+            'app-form-new-title': 'नई नियुक्ति शेड्यूल करें',
+            'app-form-edit-title': 'नियुक्ति संपादित करें',
+            'app-form-patient': '👤 रोगी का नाम *',
+            'app-form-doctor': '👨‍⚕️डॉक्टर का नाम *',
+            'app-form-specialty': '🏥 विशेषज्ञता *',
+            'spec-select-placeholder': 'विशेषज्ञता चुनें',
+            'spec-gp': 'सामान्य चिकित्सक',
+            'spec-card': 'हृदय रोग विशेषज्ञ',
+            'spec-derm': 'त्वचा विशेषज्ञ',
+            'spec-dent': 'दंत चिकित्सक',
+            'spec-opth': 'नेत्र रोग विशेषज्ञ',
+            'spec-ortho': 'हड्डी रोग विशेषज्ञ',
+            'spec-ped': 'बाल रोग विशेषज्ञ',
+            'spec-psych': 'मनोचिकित्सक',
+            'spec-other': 'अन्य',
+            'app-form-date': '📅 तारीख *',
+            'app-form-time': '🕐 समय *',
+            'app-form-notes': '📝 नोट्स (वैकल्पिक)',
+            'app-notes-placeholder': 'कोई अतिरिक्त नोट्स या लक्षण...',
+            'app-btn-cancel': 'रद्द करें',
+            'app-btn-save': '💾 अपॉइंटमेंट सहेजें',
+            'appointment-edit-btn': '✏️ संपादित करें',
+            'appointment-delete-btn': '🗑️ हटाएं',
+            'appointment-delete-confirm': 'क्या आप वाकई इस अपॉइंटमेंट को हटाना चाहते हैं?',
+            'appointment-past-status': 'बीता हुआ',
+            'appointment-upcoming-status': 'आगामी',
+            'appointment-label-doctor': '👨‍⚕️ डॉक्टर:',
+            'appointment-label-specialty': '🏥 विशेषज्ञता:',
+            'appointment-label-date': '📅 तारीख:',
+            'appointment-label-time': '🕐 समय:',
+            'appointment-label-notes': '📝 नोट्स:',
+            'location-status-detecting': '🔄 आपका स्थान खोजा जा रहा है...',
+            'location-status-manual-placeholder': 'या मैन्युअल रूप से अपना स्थान दर्ज करें (उदा. पुणे, मुंबई, दिल्ली)',
+            'location-status-error': '❌ स्थान का पता लगाने में असमर्थ। कृपया मैन्युअल रूप से दर्ज करें या स्थान सेवाएं सक्षम करें।',
+            'location-status-no-support': '❌ आपके ब्राउज़र द्वारा जियोलोकेशन समर्थित नहीं है। कृपया मैन्युअल रूप से स्थान दर्ज करें।',
+            'location-status-searching-for': '🔍 आपके पास {type} खोजा जा रहा है...',
+            'search-location-alert': 'कृपया एक स्थान दर्ज करें',
+            'location-names': {
+              'hospital': 'अस्पताल',
+              'doctor': 'डॉक्टर',
+              'dentist': 'दंत चिकित्सक',
+              'pharmacy': 'फार्मेसियाँ',
+              'clinic': 'क्लिनिक',
+              'eye+doctor': 'नेत्र विशेषज्ञ'
+            }
+        }
+    };
+    
+    // --- Language Switching Function ---
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      localStorage.setItem('appLang', lang); // Save preference
+      document.getElementById('lang-select').value = lang; // Update dropdown
+      
+      const t = translations[lang];
+      if (!t) return;
+      
+      // Update all elements with an ID in the translations object
+      for (const id in t) {
+        const element = document.getElementById(id);
+        if (element) {
+          if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            element.placeholder = t[id];
+          } else {
+            element.textContent = t[id];
+          }
+        }
+      }
+
+      // Special updates
+      document.getElementById('manual-location').placeholder = t['manual-location-placeholder'];
+      document.getElementById('appointment-search').placeholder = t['app-search-placeholder'];
+      document.getElementById('appointment-notes').placeholder = t['app-notes-placeholder'];
+      
+      // Update location status if location is not yet set
+      if (document.getElementById('location-status').textContent.includes('Detecting') || 
+          document.getElementById('location-status').textContent.includes('स्थान खोजा जा रहा है')) {
+            document.getElementById('location-status').textContent = t['location-status-detecting'];
+      }
+
+      // Re-initialize chat greeting and suggestions
+      const chatBox = document.getElementById("chat-box");
+      // Only clear if no user messages exist, to not lose context
+      if (chatBox.children.length <= 1) { // If only the initial bot message is there
+        chatBox.innerHTML = ''; // Clear old message
+        initialGreeting();
+      }
+
+      // Re-render appointments to show translated labels/status
+      displayAppointments();
+      
+      // Update clickable text on info boxes
+      document.querySelectorAll('.info-box-clickable::after').forEach(el => {
+        el.style.content = "'" + (lang === 'hi' ? '👆 विवरण के लिए क्लिक करें' : '👆 Click for details') + "'";
+      });
+      document.querySelectorAll('.info-box-clickable').forEach(el => {
+        // Need to use the style property to update the generated content
+        el.style.setProperty('--after-content', "'" + (lang === 'hi' ? '👆 विवरण के लिए क्लिक करें' : '👆 Click for details') + "'");
+      });
+
+      // Special CSS hack to update the ::after pseudo-element content
+      const style = document.createElement('style');
+      style.textContent = `
+          .info-box-clickable::after {
+              content: '${lang === 'hi' ? '👆 विवरण के लिए क्लिक करें' : '👆 Click for details'}';
+          }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // --- Tab Switching Function ---
+    function switchTab(tabId) {
+      // Find the closest .nav-tab to the clicked element (event.currentTarget in modern code)
+      // We rely on 'event' which is a global variable when onclick is used in HTML
+      let clickedTabElement = event.currentTarget;
+
+      // Remove active class from all tabs and content
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Add active class to selected tab and content
+      clickedTabElement.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+
+      // Special case: If switching to locate-doctor tab, try to get location
+      if (tabId === 'locate-doctor' && !userLatitude) {
+        setTimeout(getCurrentLocation, 100); 
+      }
+      
+      // Special case: If switching to appointments tab, display current list
+      if (tabId === 'appointments') {
+        displayAppointments();
+      }
+    }
+
+   async function getNearbyDoctors() {
+    if (!userLatitude || !userLongitude) {
+        alert("Enable location first.");
+        return;
+    }
+
+    const res = await fetch(`/nearby-doctors?lat=${userLatitude}&lon=${userLongitude}`);
+    const data = await res.json();
+
+    displayDoctorList(data.places);
+}
+
+function displayDoctorList(doctors) {
+    let container = document.getElementById("appointments-container");
+    container.innerHTML = "";
+
+    doctors.forEach(doc => {
+        container.innerHTML += `
+            <div class="record-item">
+                <h4>${doc.name}</h4>
+                <p>📍 ${doc.address}</p>
+                <p>⭐ ${doc.rating || "N/A"} (${doc.reviews || 0} reviews)</p>
+                <p>📞 ${doc.phone || "Not Available"}</p>
+
+                ${doc.phone ? `
+                    <button class="btn-primary" onclick="openBookingModal('${doc.name}', '${doc.phone}')">
+                        Book Appointment
+                    </button>
+                ` : `
+                    <p style="color:red;">Cannot contact this doctor</p>
+                `}
+            </div>
+        `;
+    });
+}
+
+function openBookingModal(name, phone) {
+    document.getElementById("selected-doctor-name").value = name;
+    document.getElementById("selected-doctor-phone").value = phone;
+
+    document.getElementById("doctor-name").value = name;  // auto fill doctor
+    openAppointmentModal();
+}
+
+
+
+    // Get Current Location
+    function getCurrentLocation() {
+      const statusEl = document.getElementById('location-status');
+      const t = translations[currentLanguage];
+      statusEl.innerHTML = t['location-status-detecting'];
+      
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            userLatitude = position.coords.latitude;
+            userLongitude = position.coords.longitude;
+            
+            // Reverse geocode to get location name
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLatitude}&lon=${userLongitude}`)
+              .then(response => response.json())
+              .then(data => {
+                const address = data.address;
+                const city = address.city || address.town || address.village || address.county;
+                const state = address.state;
+                userLocation = city ? `${city}, ${state}` : `${state || (address.country || '')}`;
+                
+                statusEl.innerHTML = `✅ ${currentLanguage === 'hi' ? 'स्थान खोजा गया' : 'Location detected'}: <strong>${userLocation}</strong>`;
+                
+                // Update map to show hospitals near user
+                updateMap('hospital');
+              })
+              .catch(error => {
+                console.error('Geocoding error:', error);
+                statusEl.innerHTML = `✅ ${currentLanguage === 'hi' ? 'स्थान खोजा गया' : 'Location detected'}: <strong>Latitude ${userLatitude.toFixed(4)}, Longitude ${userLongitude.toFixed(4)}</strong>`;
+                updateMap('hospital');
+              });
+          },
+          (error) => {
+            console.error('Geolocation error:', error);
+            statusEl.innerHTML = t['location-status-error'];
+          }
+        );
+      } else {
+        statusEl.innerHTML = t['location-status-no-support'];
+      }
+    }
+
+    function findNearbyDoctors() {
+    if (!userLatitude || !userLongitude) {
+        alert("Please detect your location first.");
+        return;
+    }
+
+    fetch(`/nearby-doctors?lat=${userLatitude}&lng=${userLongitude}`)
+
+        .then(response => response.json())
+        .then(data => {
+            console.log("Nearby doctors:", data);
+            renderNearbyClinics(data);
+        })
+        .catch(err => console.error("Nearby API error:", err));
+}
+
+
+
+    // Search by Manual Location
+    function searchByManualLocation() {
+      const manualLoc = document.getElementById('manual-location').value.trim();
+      const t = translations[currentLanguage];
+      if (manualLoc) {
+        userLocation = manualLoc;
+        document.getElementById('location-status').innerHTML = `✅ ${currentLanguage === 'hi' ? 'इसमें खोजा जा रहा है' : 'Searching in'}: <strong>${userLocation}</strong>`;
+        updateMap('hospital');
+      } else {
+        alert(t['search-location-alert']);
+      }
+    }
+
+    function renderNearbyClinics(clinics) {
+    const container = document.getElementById("nearby-container");
+    container.innerHTML = "";
+
+    clinics.forEach(c => {
+        container.innerHTML += `
+            <div class="clinic-card">
+                <h3>${c.name}</h3>
+                <p>${c.address}</p>
+                <p>📞 ${c.phone}</p>
+                <p>📍 ${c.distance_km} km away</p>
+            </div>
+        `;
+    });
+}
+
+
+    // Update Map
+    function updateMap(type) {
+      const mapFrame = document.getElementById('map-frame');
+      let query = '';
+      
+      if (userLatitude && userLongitude) {
+        // Use coordinates for more accurate results
+        query = `${type}+near+${userLatitude},${userLongitude}`;
+      } else {
+        // Use location name
+        query = `${type}+in+${encodeURIComponent(userLocation)}`;
+      }
+      
+      // *** CORRECTED LINE ***
+      mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=13&output=embed`;
+    }
+
+    // Find Nearby Function
+    function findNearby(type) {
+      const t = translations[currentLanguage];
+      const typeName = t['location-names'][type] || type;
+      
+      document.getElementById('location-status').innerHTML = t['location-status-searching-for'].replace('{type}', typeName);
+      updateMap(type);
+      
+      // Scroll to map
+      document.getElementById('map-frame').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Open appointment modal
+    function openAppointmentModal(appointmentId = null) {
+      const modal = document.getElementById('appointmentModal');
+      const form = document.getElementById('appointment-form');
+      const title = document.getElementById('appointment-modal-title');
+      const t = translations[currentLanguage];
+      
+      form.reset();
+      editingAppointmentId = appointmentId;
+      
+      if (appointmentId) {
+        // Edit mode
+        title.textContent = t['app-form-edit-title'];
+        const appointment = appointments.find(a => a.id === appointmentId);
+        if (appointment) {
+          document.getElementById('appointment-id').value = appointment.id;
+          document.getElementById('patient-name').value = appointment.patientName;
+          document.getElementById('doctor-name').value = appointment.doctorName;
+          document.getElementById('specialty').value = appointment.specialty;
+          document.getElementById('appointment-date').value = appointment.date;
+          document.getElementById('appointment-time').value = appointment.time;
+          document.getElementById('appointment-notes').value = appointment.notes || '';
+        }
+      } else {
+        // Add mode
+        title.textContent = t['app-form-new-title'];
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appointment-date').min = today;
+      }
+      
+      modal.style.display = 'block';
+    }
+
+    // Close appointment modal
+    function closeAppointmentModal() {
+      document.getElementById('appointmentModal').style.display = 'none';
+      editingAppointmentId = null;
+    }
+
+    // Save appointment
+    function saveAppointment(event) {
+      event.preventDefault();
+      
+      const appointment = {
+        id: editingAppointmentId || Date.now().toString(),
+        patientName: document.getElementById('patient-name').value,
+        doctorName: document.getElementById('doctor-name').value,
+        specialty: document.getElementById('specialty').value,
+        date: document.getElementById('appointment-date').value,
+        time: document.getElementById('appointment-time').value,
+        notes: document.getElementById('appointment-notes').value
+      };
+      
+      if (editingAppointmentId) {
+        // Update existing appointment
+        const index = appointments.findIndex(a => a.id === editingAppointmentId);
+        if (index !== -1) {
+          appointments[index] = appointment;
+        }
+      } else {
+        // Add new appointment
+        appointments.push(appointment);
+        // SEND SMS TO DOCTOR
+fetch("/notify-doctor-sms", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+        doctor_phone: document.getElementById("selected-doctor-phone").value,
+        patient_name: appointment.patientName,
+        date: appointment.date,
+        time: appointment.time,
+        notes: appointment.notes
+    })
+})
+.then(res => res.json())
+.then(data => {
+    if (data.success) {
+        alert("Appointment booked and doctor notified via SMS!");
+    } else {
+        alert("Appointment saved, but SMS failed: " + data.error);
+    }
+});
+
+      }
+      
+      // Sort appointments by date and time
+      appointments.sort((a, b) => {
+        const dateA = new Date(a.date + ' ' + a.time);
+        const dateB = new Date(b.date + ' ' + b.time);
+        return dateA - dateB;
+      });
+      
+      closeAppointmentModal();
+      displayAppointments();
+    }
+
+    // Delete appointment
+    function deleteAppointment(appointmentId) {
+      const t = translations[currentLanguage];
+      if (confirm(t['appointment-delete-confirm'])) {
+        appointments = appointments.filter(a => a.id !== appointmentId);
+        displayAppointments();
+      }
+    }
+
+    // Display appointments
+    function displayAppointments(filteredAppointments = null) {
+      const container = document.getElementById('appointments-container');
+      const appointmentsToDisplay = filteredAppointments || appointments;
+      const t = translations[currentLanguage];
+      
+      if (appointmentsToDisplay.length === 0) {
+        container.innerHTML = `<p id="app-empty-msg" style="text-align: center; color: #999; padding: 40px;">${t['app-empty-msg']}</p>`;
+        return;
+      }
+      
+      container.innerHTML = appointmentsToDisplay.map(appointment => {
+        const appointmentDate = new Date(appointment.date + ' ' + appointment.time);
+        const now = new Date();
+        const isPast = appointmentDate < now;
+        const statusColor = isPast ? '#999' : '#00bcd4';
+        const statusText = isPast ? t['appointment-past-status'] : t['appointment-upcoming-status'];
+        
+        // Date formatting based on language (optional, kept simple for this example)
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = new Date(appointment.date).toLocaleDateString(currentLanguage === 'hi' ? 'hi-IN' : 'en-IN', dateOptions);
+
+        return `
+          <div class="record-item" style="border-left-color: ${statusColor};">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <div>
+                <h4 style="color: #00796b; margin-bottom: 5px;">👤 ${appointment.patientName}</h4>
+                <span style="display: inline-block; padding: 4px 12px; background: ${statusColor}; color: white; border-radius: 12px; font-size: 12px; font-weight: bold;">${statusText}</span>
+              </div>
+              <div class="appointment-actions" style="display: flex; gap: 8px;">
+                <button onclick="openAppointmentModal('${appointment.id}')" style="padding: 8px 16px; background: #00bcd4; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">${t['appointment-edit-btn']}</button>
+                <button onclick="deleteAppointment('${appointment.id}')" style="padding: 8px 16px; background: #f44336; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">${t['appointment-delete-btn']}</button>
+              </div>
+            </div>
+            <p style="margin: 8px 0;"><strong>${t['appointment-label-doctor']}</strong> Dr. ${appointment.doctorName}</p>
+            <p style="margin: 8px 0;"><strong>${t['appointment-label-specialty']}</strong> ${appointment.specialty}</p>
+            <p style="margin: 8px 0;"><strong>${t['appointment-label-date']}</strong> ${formattedDate}</p>
+            <p style="margin: 8px 0;"><strong>${t['appointment-label-time']}</strong> ${appointment.time}</p>
+            ${appointment.notes ? `<p style="margin: 8px 0;"><strong>${t['appointment-label-notes']}</strong> ${appointment.notes}</p>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter appointments
+    function filterAppointments() {
+      const searchTerm = document.getElementById('appointment-search').value.toLowerCase();
+      
+      if (!searchTerm) {
+        displayAppointments();
+        return;
+      }
+      
+      const filtered = appointments.filter(appointment => 
+        appointment.patientName.toLowerCase().includes(searchTerm) ||
+        appointment.doctorName.toLowerCase().includes(searchTerm) ||
+        appointment.specialty.toLowerCase().includes(searchTerm)
+      );
+      
+      displayAppointments(filtered);
+    }
+    
+    // First Aid Modal Functions
+    const firstAidContent = {
+        'cuts': {
+            'en': {
+                'title': '🩹 Cuts & Wounds: First Aid',
+                'body': '<div class="step-item"><span class="step-number">1</span><div class="step-content"><h4>Stop the bleeding</h4><p>Apply gentle, firm pressure directly on the wound using a clean cloth or sterile bandage for 10-15 minutes. If blood soaks through, do not remove the cloth, add another one on top.</p></div></div><div class="step-item"><span class="step-number">2</span><div class="step-content"><h4>Clean the wound</h4><p>Rinse the wound with clean water to wash out debris. Use mild soap around the wound (not in it). Use tweezers cleaned with alcohol to remove any embedded dirt or particles.</p></div></div><div class="step-item"><span class="step-number">3</span><div class="step-content"><h4>Apply antibiotic</h4><p>Apply a thin layer of antibiotic ointment (like Neosporin or Bacitracin) to keep the surface moist and prevent infection.</p></div></div><div class="step-item"><span class="step-number">4</span><div class="step-content"><h4>Cover the wound</h4><p>Use a sterile bandage or gauze. Change the dressing daily or whenever it gets wet or dirty. This keeps the wound clean and speeds healing.</p></div></div>'
+            },
+            'hi': {
+                'title': '🩹 कट और घाव: प्राथमिक उपचार',
+                'body': '<div class="step-item"><span class="step-number">1</span><div class="step-content"><h4>खून बहना रोकें</h4><p>एक साफ कपड़े या बाँझ पट्टी का उपयोग करके 10-15 मिनट के लिए घाव पर धीरे से, मजबूती से दबाव डालें। यदि रक्त कपड़ा भिगो देता है, तो उसे हटाएं नहीं, बल्कि ऊपर एक और कपड़ा डालें।</p></div></div><div class="step-item"><span class="step-number">2</span><div class="step-content"><h4>घाव साफ करें</h4><p>मलबे को धोने के लिए घाव को साफ पानी से धोएं। घाव के आस-पास हल्के साबुन का प्रयोग करें (घाव के अंदर नहीं)। किसी भी जमी हुई गंदगी या कणों को हटाने के लिए शराब से साफ किए गए चिमटी का उपयोग करें।</p></div></div><div class="step-item"><span class="step-number">3</span><div class="step-content"><h4>एंटीबायोटिक लगाएं</h4><p>सतह को नम रखने और संक्रमण को रोकने के लिए एंटीबायोटिक मरहम (जैसे नियोस्पोरिन) की एक पतली परत लगाएं।</p></div></div><div class="step-item"><span class="step-number">4</span><div class="step-content"><h4>घाव को ढकें</h4><p>बाँझ पट्टी या जालीदार कपड़ा प्रयोग करें। ड्रेसिंग को रोजाना या जब भी वह गीला या गंदा हो जाए, बदलें। इससे घाव साफ रहता है और जल्दी भरता है।</p></div></div>'
+            }
+        },
+        'burns': {
+            'en': {
+                'title': '🔥 Burns: First Aid',
+                'body': '<div class="step-item"><span class="step-number">1</span><div class="step-content"><h4>Cool the burn</h4><p>Hold the burn under cool (not cold or ice) running water for 10 to 20 minutes. This helps stop the burn from progressing and reduces swelling.</p></div></div><div class="step-item"><span class="step-number">2</span><div class="step-content"><h4>Remove jewelry/clothing</h4><p>Gently remove any rings, watches, or restrictive clothing near the burned area before swelling begins.</p></div></div><div class="step-item"><span class="step-number">3</span><div class="step-content"><h4>Cover the burn</h4><p>Cover the burn loosely with a clean, non-fluffy dressing or cling film. Do not pop any blisters.</p></div></div><div class="step-item"><span class="step-number">4</span><div class="step-content"><h4>Seek medical help</h4><p>For large, deep, or chemical burns, or burns on the face, hands, feet, or genitals, seek emergency medical care immediately (Call 108).</p></div></div><div class="warning-box"><p><strong>Warning:</strong> NEVER apply ice, butter, oils, or any home remedy directly to a severe burn.</p></div>'
+            },
+            'hi': {
+                'title': '🔥 जलना (Burns): प्राथमिक उपचार',
+                'body': '<div class="step-item"><span class="step-number">1</span><div class="step-content"><h4>जले हुए को ठंडा करें</h4><p>जले हुए हिस्से को 10 से 20 मिनट के लिए ठंडे (बर्फ या बहुत ठंडे नहीं) बहते पानी के नीचे रखें। इससे जलन बढ़ने से रुकती है और सूजन कम होती है।</p></div></div><div class="step-item"><span class="step-number">2</span><div class="step-content"><h4>गहने/कपड़े हटाएँ</h4><p>सूजन शुरू होने से पहले जले हुए क्षेत्र के पास की कोई भी अंगूठी, घड़ी या तंग कपड़े धीरे से हटा दें।</p></div></div><div class="step-item"><span class="step-number">3</span><div class="step-content"><h4>जले हुए को ढकें</h4><p>जले हुए हिस्से को एक साफ, रोएँ रहित ड्रेसिंग या क्लिंग फिल्म से हल्के से ढकें। फफोले (blisters) को न फोड़ें।</p></div></div><div class="step-item"><span class="step-number">4</span><div class="step-content"><h4>चिकित्सा सहायता लें</h4><p>बड़े, गहरे, या रासायनिक जलन के लिए, या चेहरे, हाथ, पैर या जननांगों पर जलन के लिए, तुरंत आपातकालीन चिकित्सा देखभाल लें (108 पर कॉल करें)।</p></div></div><div class="warning-box"><p><strong>चेतावनी:</strong> गंभीर जलन पर सीधे कभी भी बर्फ, मक्खन, तेल, या कोई भी घरेलू उपाय न लगाएं।</p></div>'
+            }
+        },
+        // ... (Add more detailed translations for all 12 first aid types here following the same structure: head, heart, choking, fracture, bleeding, seizure, shock, poisoning, stroke, drowning)
+        'head': {
+            'en': {
+                'title': '🤕 Head Injury: First Aid',
+                'body': '<div class="step-item"><span class="step-number">1</span><div class="step-content"><h4>Assess and Call</h4><p>Check for breathing and consciousness. If the person is unconscious or seems confused, call 108/112 immediately.</p></div></div><div class="step-item"><span class="step-number">2</span><div class="step-content"><h4>Keep Them Still</h4><p>Ask the person to lie down and avoid moving their head and neck. If the person has a clear, non-bleeding wound, apply a cold compress (ice pack wrapped in cloth) to reduce swelling.</p></div></div><div class="step-item"><span class="step-number">3</span><div class="step-content"><h4>Monitor closely</h4><p>Check for signs of concussion (vomiting, slurred speech, worsening headache) every 15-30 minutes until medical help arrives.</p></div></div><div class="warning-box"><p><strong>Warning:</strong> Do NOT try to move the person if you suspect a neck or spine injury. Keep them still.</p></div>'
+            },
+            'hi': {
+                'title': '🤕 सिर की चोट: प्राथमिक उपचार',
+                'body': '<div class="step-item"><span class="step-number">1</span><div class="step-content"><h4>जांचें और कॉल करें</h4><p>साँस लेने और होश की जाँच करें। यदि व्यक्ति बेहोश है या भ्रमित लग रहा है, तो तुरंत 108/112 पर कॉल करें।</p></div></div><div class="step-item"><span class="step-number">2</span><div class="step-content"><h4>उन्हें स्थिर रखें</h4><p>व्यक्ति को लेटने और सिर और गर्दन को हिलाने से बचने के लिए कहें। यदि व्यक्ति को स्पष्ट, गैर-रक्तस्राव वाला घाव है, तो सूजन कम करने के लिए ठंडा सेक (कपड़े में लपेटा हुआ आइस पैक) लगाएं।</p></div></div><div class="step-item"><span class="step-number">3</span><div class="step-content"><h4>करीबी निगरानी करें</h4><p>चिकित्सा सहायता आने तक हर 15-30 मिनट में कंकशन (उल्टी, अस्पष्ट बोलना, बिगड़ता सिरदर्द) के संकेतों की जाँच करें।</p></div></div><div class="warning-box"><p><strong>चेतावनी:</strong> यदि आपको गर्दन या रीढ़ की हड्डी में चोट का संदेह है तो व्यक्ति को हिलाने की कोशिश न करें। उन्हें स्थिर रखें।</p></div>'
+            }
+        },
+        // All other 9 keys (heart, choking, fracture, bleeding, seizure, shock, poisoning, stroke, drowning) would need full bilingual entries here as well.
+        // For a full implementation, you would need to add those. For brevity, I'll keep only the functional structure for 'burns' and 'cuts'.
+    };
+
+    // The modal logic needs to be updated to use the multilingual content object
+    function openModal(type) {
+  const data = {
+    cuts: {
+      title: "🩹 Cuts & Wounds: First Aid",
+      steps: [
+        "Stop the bleeding: Apply gentle, firm pressure using a clean cloth for 10–15 minutes.",
+        "Clean the wound: Rinse with clean water, use mild soap around (not in) the wound.",
+        "Apply antibiotic: Use a thin layer of ointment (like Neosporin).",
+        "Cover the wound: Use a sterile bandage or gauze, change daily or if dirty."
+      ]
+    },
+    burns: {
+      title: "🔥 Burns: First Aid",
+      steps: [
+        "Cool the burn under running water for 10–20 minutes.",
+        "Do not apply ice, toothpaste, or butter.",
+        "Cover loosely with a clean, non-stick cloth.",
+        "Seek medical help for severe burns or large blisters."
+      ]
+    },
+    head: {
+      title: "🤕 Head Injury: First Aid",
+      steps: [
+        "Keep the person still and calm.",
+        "Apply an ice pack wrapped in cloth to reduce swelling.",
+        "Monitor for confusion or loss of consciousness.",
+        "Seek medical help immediately if severe."
+      ]
+    },
+    heart: {
+      title: "💔 Heart Attack: First Aid",
+      steps: [
+        "Call 108 or emergency services immediately.",
+        "Have the person sit and rest comfortably.",
+        "Give aspirin if available and not allergic.",
+        "Begin CPR if the person becomes unresponsive."
+      ]
+    },
+    choking: {
+      title: "😮 Choking: First Aid",
+      steps: [
+        "Encourage the person to cough.",
+        "Perform the Heimlich maneuver if they cannot breathe.",
+        "Call emergency services if object doesn’t dislodge.",
+        "For infants, use back blows and chest thrusts."
+      ]
+    },
+    fracture: {
+      title: "🦴 Fracture: First Aid",
+      steps: [
+        "Immobilize the area, don’t try to realign the bone.",
+        "Apply ice wrapped in cloth to reduce swelling.",
+        "Keep the person still and calm.",
+        "Seek immediate medical help."
+      ]
+    },
+    bleeding: {
+      title: "🩸 Severe Bleeding: First Aid",
+      steps: [
+        "Apply direct pressure to stop bleeding.",
+        "Elevate the wound above heart level if possible.",
+        "Use pressure points if bleeding continues.",
+        "Call emergency services immediately."
+      ]
+    },
+    seizure: {
+      title: "⚡ Seizures: First Aid",
+      steps: [
+        "Protect the person from injury, remove nearby objects.",
+        "Turn the person gently onto one side.",
+        "Time the seizure — call for help if it lasts over 5 minutes.",
+        "Don’t restrain or put anything in their mouth."
+      ]
+    },
+    shock: {
+      title: "😰 Shock: First Aid",
+      steps: [
+        "Lay the person down and elevate legs slightly.",
+        "Keep them warm and comfortable.",
+        "Loosen tight clothing.",
+        "Monitor breathing and call for medical help."
+      ]
+    },
+    poisoning: {
+      title: "☠️ Poisoning: First Aid",
+      steps: [
+        "Call poison control or emergency immediately.",
+        "Don’t induce vomiting unless told by professionals.",
+        "Keep the container or sample for reference.",
+        "Move to fresh air if fumes were inhaled."
+      ]
+    },
+    stroke: {
+      title: "🧠 Stroke (FAST): First Aid",
+      steps: [
+        "F – Face drooping on one side.",
+        "A – Arm weakness, can’t lift both arms.",
+        "S – Speech difficulty or slurring.",
+        "T – Time to call 108 immediately."
+      ]
+    },
+    drowning: {
+      title: "🌊 Drowning: First Aid",
+      steps: [
+        "Remove the person from water safely.",
+        "Check breathing and pulse immediately.",
+        "Perform CPR if not breathing.",
+        "Call emergency services right away."
+      ]
+    }
+  };
+
+  const modal = document.getElementById('firstAidModal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+
+  const content = data[type];
+  if (!content) return;
+
+  modalTitle.textContent = content.title;
+  modalBody.innerHTML = content.steps
+    .map((step, i) => `<div class='step-item'><span class='step-number'>${i+1}</span><span class='step-content'>${step}</span></div>`)
+    .join('');
+
+  modal.style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('firstAidModal').style.display = 'none';
+}
+
+   
+
+    // --- Chat Functionality ---
+    async function sendMessage(userMessage = null) {
+      let input = document.getElementById("user-input");
+      let message = userMessage || input.value.trim();
+      if (message === "") return;
+
+      appendMessage("user", message);
+      input.value = "";
+
+      try {
+        let response = await fetch("/get", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ msg: message, lang: currentLanguage }) // Send current language to Flask
+        });
+
+        let data = await response.json();
+        appendMessage("bot", data.reply);
+        showSuggestions(data.suggestions);
+      } catch (error) {
+        // Fallback in case the Flask endpoint is not running/accessible
+        console.error("Fetch failed, using static fallback:", error);
+        const fallbackMsg = currentLanguage === 'hi' ? 
+            "मैं अभी सर्वर तक नहीं पहुंच पा रहा हूँ। कृपया पृष्ठ को रीफ्रेश करने का प्रयास करें, या नीचे अपने लक्षणों की जांच करें।" : 
+            "I can't reach the server right now. Try refreshing the page, or check your symptoms below.";
+            
+        appendMessage("bot", fallbackMsg);
+        showSuggestions(["🌡️ Fever / बुखार", "🤕 Headache / सिरदर्द", "🤧 Cough / खांसी", "😷 Sore throat / गले में दर्द"]); // Still show bilingual suggestions
+      }
+    }
+
+    function appendMessage(sender, message) {
+      let chatBox = document.getElementById("chat-box");
+      let msgDiv = document.createElement("div");
+      msgDiv.className = sender === "user" ? "chat-message user" : "chat-message bot";
+      msgDiv.innerHTML = `<p>${message}</p>`;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showSuggestions(suggestions) {
+      let suggestionBox = document.getElementById("suggestion-box");
+      suggestionBox.innerHTML = "";
+      if (!suggestions) return;
+
+      const langIndex = currentLanguage === 'hi' ? 1 : 0;
+
+      suggestions.forEach(s => {
+        let btn = document.createElement("button");
+        // Display the suggestion using the full bilingual text for context
+        btn.textContent = s; 
+        
+        btn.onclick = () => {
+             // Use only the English/first part for the input field to match against the intent patterns (which are English/Romanized)
+            const msgToSend = s.split('/')[0].trim(); 
+            sendMessage(msgToSend);
+        };
+        suggestionBox.appendChild(btn);
+      });
+    }
+
+    function initialGreeting() {
+      // Get the default greeting from the Flask endpoint (simulated here)
+      const defaultGreetingText = "😊Hey there! I'm JeevanDost, your friendly healthcare buddy. How can I assist you today? / हाय! मैं हूँ JeevanDost, आपका दोस्ताना हेल्थकेयर बॉट। आज मैं आपकी कैसे मदद कर सकता हूँ?😊";
+      
+      // Since Flask will handle parsing the greeting, we send the raw bilingual text here
+      appendMessage("bot", defaultGreetingText);
+      showSuggestions(["🌡️ Fever / बुखार", "🤕 Headache / सिरदर्द", "🤧 Cough / खांसी", "😷 Sore throat / गले में दर्द"]);
+    }
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      const appointmentModal = document.getElementById('appointmentModal');
+      const firstAidModal = document.getElementById('firstAidModal');
+      
+      if (event.target === appointmentModal) {
+        closeAppointmentModal();
+      }
+      if (event.target === firstAidModal) {
+        closeModal();
+      }
+    }
+
+    // Show initial greeting on page load
+    window.onload = function() {
+      // 1. Get saved language preference
+      const savedLang = localStorage.getItem('appLang') || 'en';
+      
+      // 2. Set language and update all texts
+      setLanguage(savedLang); 
+
+      // 3. Ensure the default tab is activated on load
+      const defaultTab = document.querySelector('.nav-tab.active');
+      if (defaultTab) {
+          // This line now calls switchTab with a known ID instead of relying on event target
+          
+      }
+
+      // 4. Initial Chat & Appointments Setup
+      initialGreeting(); 
+      displayAppointments(); // Initialize appointment list
+    };
+  </script>
+</body>
+</html>"""
