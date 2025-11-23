@@ -217,7 +217,6 @@ def login():
     if not username or not password:
         return render_template("login.html", error="Please enter username + password")
 
-    # Fetch user from Supabase
     try:
         res = supabase.table("users").select("*").eq("username", username).execute()
     except Exception as e:
@@ -234,9 +233,9 @@ def login():
         return render_template("login.html", error="Invalid username or password")
 
     # SUCCESS → create session
-    session["user_id"] = user["id"]
+    session["user_id"] = user["id"]        # ✅ FIXED
+    session["email"] = user["email"]
     session["username"] = user["username"]
-    session["full_name"] = user.get("full_name")
 
     return redirect("/")
 
@@ -332,6 +331,21 @@ def logout():
 # ---------------------------------------------------------
 # API — USER PROFILE
 # ---------------------------------------------------------
+@app.route("/api/my-profile")
+def api_my_profile():
+    if not is_logged_in():
+        return jsonify({"error": "Not logged in"}), 401
+
+    uid = session.get("user_id")
+
+    res = supabase.table("users").select("username,full_name, age, phone").eq("id", uid).execute()
+
+    if not res.data:
+        return jsonify({"error": "Profile not found"}), 404
+
+    return jsonify(res.data[0])
+
+
 @app.route("/api/me")
 def api_me():
     if not is_logged_in():
@@ -368,7 +382,8 @@ def api_create_appointment():
     if not is_logged_in():
         return jsonify({"error": "Not authenticated"}), 401
 
-    data = request.get_json() or request.form
+    data = request.get_json()
+
     doctor = data.get("doctor_name")
     specialty = data.get("specialty", "General")
     date = data.get("date")
@@ -378,19 +393,26 @@ def api_create_appointment():
     if not doctor or not date or not time:
         return jsonify({"error": "Missing fields"}), 400
 
+    # 🟩 IMPORTANT: inject user_id from session
     payload = {
-        "user_id": session.get("user_id"),
+        "user_id": session["user_id"],
         "doctor_name": doctor,
         "specialty": specialty,
         "date": date,
         "time": time,
-        "notes": notes,
+        "notes": notes
     }
 
+    # Insert into Supabase
     res = supabase.table("appointments").insert(payload).execute()
 
-    return jsonify({"success": True, "appointment": res.data[0]})
+    if res.data:
+        return jsonify({"success": True, "appointment": res.data[0]})
 
+    return jsonify({"error": "Insert failed", "details": res}), 500
+
+
+    
 
 @app.route("/api/appointments/<appt_id>", methods=["DELETE"])
 def api_delete_appointment(appt_id):
