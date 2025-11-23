@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from supabase import create_client
 import math
 
+
+
 import json
 import random
 
@@ -35,20 +37,26 @@ if not SUPABASE_URL or not SUPABASE_ANON_KEY:
 supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 
-# Twilio Config
+# --- TWILIO CONFIG (ENV VARIABLES ONLY) ---
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_FROM_NUMBER = os.getenv("TWILIO_FROM_NUMBER")
 
+print("Loaded TWILIO_ACCOUNT_SID?", bool(TWILIO_ACCOUNT_SID))
+print("Loaded TWILIO_AUTH_TOKEN?", bool(TWILIO_AUTH_TOKEN))
+print("Loaded TWILIO_FROM_NUMBER?", bool(TWILIO_FROM_NUMBER))
+print("TwilioClient imported?", bool(TwilioClient))
 
-# Initialize Twilio client
 twilio_client = None
 if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and TwilioClient:
     try:
         twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        print("✅ Twilio client initialized successfully.")
     except Exception as e:
-        print("Twilio init failed:", e)
-        twilio_client = None
+        print("❌ Twilio init failed:", e)
+else:
+    print("⚠️ Twilio not configured — missing SID/TOKEN or Twilio library.")
+
 
 # ---------------------------------------------------------
 # AI ADVICE — Load intents.json
@@ -157,6 +165,78 @@ def notify_doctor_sms():
     except Exception as e:
         print("Twilio send error:", e)
         return jsonify({"success": False, "error": str(e)}), 500
+    
+    # -----------------------------------------------
+# CREATE APPOINTMENT + SEND SMS TO DOCTOR
+# -----------------------------------------------
+@app.route("/api/create-appointment", methods=["POST"])
+def create_appointment():
+    if not is_logged_in():
+        return jsonify({"success": False, "error": "Not logged in"}), 401
+
+    data = request.get_json(silent=True) or {}
+
+    patient_name = data.get("patient_name", "")
+    doctor_name = data.get("doctor_name", "")
+    doctor_phone = data.get("doctor_phone", "")
+    specialty = data.get("specialty", "")
+    date = data.get("date", "")
+    time = data.get("time", "")
+    notes = data.get("notes", "")
+
+    uid = session.get("user_id")
+
+    # -------------------------------
+    # 1️⃣ Insert into Supabase
+    # -------------------------------
+    payload = {
+        "user_id": uid,
+        "patient_name": patient_name,
+        "doctor_name": doctor_name,
+        "specialty": specialty,
+        "date": date,
+        "time": time,
+        "notes": notes,
+        
+    }
+
+    try:
+        res = supabase.table("appointments").insert(payload).execute()
+        saved = res.data[0]
+    except Exception as e:
+        return jsonify({"success": False, "error": "DB insert failed: " + str(e)}), 500
+
+    # -------------------------------
+    # 2️⃣ Send SMS via Twilio
+    # -------------------------------
+    sms_result = {}
+
+    if doctor_phone and twilio_client:
+        try:
+            body = (
+                f"New appointment booked:\n"
+                f"Patient: {patient_name}\n"
+                f"Doctor: {doctor_name}\n"
+                f"Date: {date}\n"
+                f"Time: {time}\n"
+                f"Notes: {notes}"
+            )
+
+            msg = twilio_client.messages.create(
+                body=body,
+                from_=TWILIO_FROM_NUMBER,
+                to=doctor_phone
+            )
+
+            sms_result = {"sent": True, "sid": msg.sid}
+
+        except Exception as e:
+            sms_result = {"sent": False, "error": str(e)}
+    else:
+        sms_result = {"sent": False, "error": "Missing doctor phone or Twilio client"}
+
+    return jsonify({"success": True, "appointment": saved, "sms": sms_result})
+
     
 
     # ---------------------------------------------------------
@@ -377,39 +457,59 @@ def api_my_appointments():
     return jsonify({"appointments": res.data or []})
 
 
-@app.route("/api/appointments", methods=["POST"])
+@app.route("/api/create-appointment", methods=["POST"])
 def api_create_appointment():
     if not is_logged_in():
-        return jsonify({"error": "Not authenticated"}), 401
+        return jsonify({"error": "Not logged in", "success": False}), 401
 
-    data = request.get_json()
+    data = request.json or {}
 
-    doctor = data.get("doctor_name")
-    specialty = data.get("specialty", "General")
+    patient_name = data.get("patient_name")
+    doctor_name = data.get("doctor_name")
+    doctor_phone = data.get("doctor_phone")
+    specialty = data.get("specialty")
     date = data.get("date")
     time = data.get("time")
-    notes = data.get("notes", "")
+    notes = data.get("notes") or ""
 
-    if not doctor or not date or not time:
-        return jsonify({"error": "Missing fields"}), 400
+    uid = session.get("user_id")
 
-    # 🟩 IMPORTANT: inject user_id from session
-    payload = {
-        "user_id": session["user_id"],
-        "doctor_name": doctor,
+    # Insert into DB
+    res = supabase.table("appointments").insert({
+        "user_id": uid,
+        "patient_name": patient_name,
+        "doctor_name": doctor_name,
+        "doctor_phone": doctor_phone,
         "specialty": specialty,
         "date": date,
         "time": time,
         "notes": notes
-    }
+    }).execute()
 
-    # Insert into Supabase
-    res = supabase.table("appointments").insert(payload).execute()
+    # ---- SEND SMS HERE ----
+    if twilio_client:
+        try:
+            body = (
+                f"📅 Appointment Confirmed!\n"
+                f"👤 Patient: {patient_name}\n"
+                f"👨‍⚕️ Doctor: {doctor_name}\n"
+                f"🏥 Specialty: {specialty}\n"
+                f"📆 Date: {date}\n"
+                f"⏰ Time: {time}\n"
+            )
 
-    if res.data:
-        return jsonify({"success": True, "appointment": res.data[0]})
+            sms = twilio_client.messages.create(
+                body=body,
+                from_=TWILIO_FROM_NUMBER,
+                to=doctor_phone
+            )
+            print("SMS sent:", sms.sid)
 
-    return jsonify({"error": "Insert failed", "details": res}), 500
+        except Exception as e:
+            print("❌ SMS failed:", e)
+    # ------------------------
+
+    return jsonify({"success": True, "appointment": res.data})
 
 
     

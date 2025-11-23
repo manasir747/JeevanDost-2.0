@@ -1471,7 +1471,7 @@ function openBookingModal(name, phone) {
         return;
     }
 
-    fetch(`/nearby-doctors?lat=${userLatitude}&lng=${userLongitude}`)
+    fetch(`/nearby-doctors?lat=${userLatitude}&lon=${userLongitude}`)
 
         .then(response => response.json())
         .then(data => {
@@ -1603,28 +1603,70 @@ function openBookingModal(name, phone) {
           appointments[index] = appointment;
         }
       } else {
-        // Add new appointment
-        appointments.push(appointment);
-        // SEND SMS TO DOCTOR
-fetch("/notify-doctor-sms", {
+       // FIRST SAVE APPOINTMENT TO DATABASE
+// FIRST SAVE APPOINTMENT TO DATABASE
+fetch("/api/create-appointment", {
+
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-        doctor_phone: document.getElementById("selected-doctor-phone").value,
+        doctor_name: appointment.doctorName,
         patient_name: appointment.patientName,
+        specialty: appointment.specialty || "General",
         date: appointment.date,
         time: appointment.time,
         notes: appointment.notes
     })
 })
 .then(res => res.json())
+.then(dbData => {
+
+    if (!dbData.success) {
+        alert("Appointment saved locally, but server failed.");
+        return;
+    }
+
+    // Refresh appointments after saving
+    fetchAppointmentsFromDatabase();
+
+    // AFTER appointment saved → send SMS
+ // SAVE appointment + SEND SMS together in backend
+return fetch("/api/create-appointment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        patient_name: appointment.patientName,
+        doctor_name: appointment.doctorName,
+        specialty: appointment.specialty,
+        date: appointment.date,
+        time: appointment.time,
+        notes: appointment.notes,
+        doctor_phone: document.getElementById("selected-doctor-phone").value
+    })
+})
+.then(r => r.json())
 .then(data => {
     if (data.success) {
-        alert("Appointment booked and doctor notified via SMS!");
+        alert("Appointment saved + SMS sent to doctor!");
     } else {
-        alert("Appointment saved, but SMS failed: " + data.error);
+        alert("Error: " + data.error);
     }
 });
+
+})
+.then(r => r.json())
+.then(smsResult => {
+    if (smsResult.success) {
+        alert("Appointment booked and doctor notified via SMS!");
+    } else {
+        alert("Appointment saved but SMS failed: " + smsResult.error);
+    }
+})
+.catch(err => console.error(err));
+
+
+    
+
 
       }
       
@@ -2007,15 +2049,17 @@ function closeModal() {
     const time       = document.getElementById("appointment-time").value;
     const notes      = document.getElementById("appointment-notes").value;
 
-    const payload = {
-        doctor_name: doctorName,
-        specialty: specialty,
-        date: date,
-        time: time,
-        notes: notes
-    };
+  const payload = {
+    doctor_name: doctorName,
+    specialty: specialty,
+    date: date,
+    time: time,
+    notes: notes,
+    doctor_phone: document.getElementById("selected-doctor-phone").value
+};
 
-    const res = await fetch("/api/appointments", {
+
+    const res = await fetch("/api/create-appointment", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
@@ -2023,16 +2067,24 @@ function closeModal() {
 
     const json = await res.json();
 
-    if (json.success) {
-        closeAppointmentModal();
-        loadAppointments();
-        alert("Appointment saved!");
+if (json.success) {
+    closeAppointmentModal();
+    loadAppointments();
+
+    if (json.sms && json.sms.sent) {
+        alert("Appointment saved and doctor notified via SMS!");
     } else {
-        alert("Error: " + (json.error || "Unknown"));
-        console.error(json);
+        alert("Appointment saved, but SMS could not be sent!");
     }
 }
+    }
 
+async function fetchAppointmentsFromDatabase() {
+    const res = await fetch("/api/my-appointments");
+    const data = await res.json();
+    appointments = data.appointments || [];
+    displayAppointments();
+}
 
 
 
