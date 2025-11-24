@@ -676,17 +676,61 @@
     🚪 Logout
 </a>
 
-<div id="user-panel" 
-     style="margin: 20px; padding: 15px; background: rgba(255,255,255,0.1); 
-            border-radius: 12px; color: white; font-size: 14px; display: none;">
+<div id="user-panel"
+     style="
+        margin: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        text-align: center;
+        color: #fff;
+        font-size: 14px;
+        display: none;
+     ">
 
-    <h4 style="margin-top: 0; margin-bottom: 10px;">👤 User Profile</h4>
+    <!-- Profile Picture -->
+    <div style="
+        width: 80px;
+        height: 80px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 50%;
+        margin: 0 auto 15px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: bold;
+        color: white;
+    ">
+        👤
+    </div>
 
-    <p id="panel-username">User Name: Loading...</p>
-    <p id="panel-name">Name: Loading...</p>
-    <p id="panel-age">Age: Loading...</p>
-    <p id="panel-phone">Phone: Loading...</p>
+    <!-- Name -->
+    <h3 id="panel-name"
+        style="margin: 0; font-size: 18px; font-weight: bold;">
+        Loading...
+    </h3>
+
+    <!-- Username -->
+    <p id="panel-username"
+       style="margin: 5px 0 10px 0; opacity: 0.8;">
+        @Loading...
+    </p>
+
+    <!-- Age -->
+    <p id="panel-age"
+       style="margin: 4px 0;">
+        <strong>Age:</strong> Loading...
+    </p>
+
+    <!-- Phone -->
+    <p id="panel-phone"
+       style="margin: 4px 0;">
+        <strong>Phone:</strong> Loading...
+    </p>
+
 </div>
+
 
       </div>
     </div>
@@ -2050,12 +2094,14 @@ function closeModal() {
     const notes      = document.getElementById("appointment-notes").value;
 
   const payload = {
+    patient_name: document.getElementById("patient-name").value.trim(),
     doctor_name: doctorName,
     specialty: specialty,
     date: date,
     time: time,
     notes: notes,
     doctor_phone: document.getElementById("selected-doctor-phone").value
+    
 };
 
 
